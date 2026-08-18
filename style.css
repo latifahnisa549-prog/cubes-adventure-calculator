@@ -26,6 +26,7 @@ body{
   min-height:100vh;
   font-family:Inter,Segoe UI,Arial,sans-serif;
   color:var(--text);
+
   background:
     radial-gradient(
       circle at 50% 10%,
@@ -33,10 +34,11 @@ body{
       #080c19 38%,
       #03050c 100%
     );
+
   overflow-x:hidden;
 }
 
-/* LIGHT MODE TETAP ADA */
+/* LIGHT MODE */
 body.light{
   --bg:#eaf5ff;
   --panel:#f7fbff;
@@ -66,7 +68,7 @@ button{
 
 
 /* =========================================================
-   BACKGROUND
+   BACKGROUND GRID
 ========================================================= */
 
 .bg-grid{
@@ -96,6 +98,11 @@ button{
   transform-origin:bottom;
 }
 
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
 .particles{
   position:fixed;
   inset:0;
@@ -118,6 +125,7 @@ button{
 }
 
 @keyframes float{
+
   from{
     transform:
       translateY(110vh)
@@ -129,11 +137,12 @@ button{
       translateY(-10vh)
       rotate(360deg);
   }
+
 }
 
 
 /* =========================================================
-   TOPBAR
+   TOP BAR
 ========================================================= */
 
 .topbar{
@@ -187,21 +196,27 @@ button{
 
 
 /* =========================================================
-   ⭐ MODE SELECT - DIBUAT LEBIH TERLIHAT
+   ⭐ MODE SELECT
+   BASIC / SCIENTIFIC / PROGRAMMER / CONVERTER
+   TULISAN BIRU
 ========================================================= */
 
 .top-actions select{
+
   min-width:165px;
 
   padding:11px 15px;
 
-  color:#ffffff !important;
+  /* TULISAN BIRU CYAN */
+  color:#35e7ff !important;
 
   font-weight:900;
+
   font-size:13px;
 
   letter-spacing:1.5px;
 
+  /* BACKGROUND TETAP DARK BLUE */
   background:
     linear-gradient(
       145deg,
@@ -209,7 +224,8 @@ button{
       #091326
     ) !important;
 
-  border:2px solid
+  border:
+    2px solid
     rgba(53,231,255,.45);
 
   border-radius:11px;
@@ -217,46 +233,63 @@ button{
   outline:none;
 
   text-shadow:
-    0 0 8px rgba(53,231,255,.5);
+    0 0 8px
+    rgba(53,231,255,.7);
 
   box-shadow:
     inset 0 0 12px
       rgba(53,231,255,.08),
+
     0 0 12px
       rgba(53,231,255,.08);
 
   cursor:pointer;
 
-  transition:
-    .2s ease;
+  transition:.2s ease;
 }
 
+
+/* HOVER MODE */
+
 .top-actions select:hover{
-  border-color:var(--cyan);
+
+  color:#5ff0ff !important;
+
+  border-color:#35e7ff;
 
   box-shadow:
     0 0 18px
-      rgba(53,231,255,.3);
+    rgba(53,231,255,.35);
 
-  transform:translateY(-1px);
+  transform:
+    translateY(-1px);
 }
 
+
+/* FOCUS MODE */
+
 .top-actions select:focus{
-  border-color:var(--cyan);
+
+  color:#35e7ff !important;
+
+  border-color:#35e7ff;
 
   box-shadow:
     0 0 22px
-      rgba(53,231,255,.35);
+    rgba(53,231,255,.4);
 }
 
 
-/* ⭐ PILIHAN DI DALAM DROPDOWN */
+/* DROPDOWN OPTIONS */
 
 .top-actions select option{
+
   background:#0b1427 !important;
-  color:#ffffff !important;
+
+  color:#35e7ff !important;
 
   font-weight:900;
+
   letter-spacing:1px;
 }
 
@@ -266,9 +299,8 @@ button{
 ========================================================= */
 
 .icon-btn{
-  min-width:42px;
 
-  color:#ffffff;
+  min-width:42px;
 
   background:
     linear-gradient(
@@ -277,7 +309,9 @@ button{
       #080d1b
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:10px;
 
@@ -285,6 +319,7 @@ button{
 }
 
 .icon-btn:hover{
+
   border-color:var(--cyan);
 
   box-shadow:
@@ -298,13 +333,16 @@ button{
 ========================================================= */
 
 .layout{
+
   position:relative;
   z-index:1;
 
   max-width:1250px;
+
   margin:0 auto;
 
-  padding:10px 20px 25px;
+  padding:
+    10px 20px 25px;
 
   display:grid;
 
@@ -323,6 +361,7 @@ button{
 ========================================================= */
 
 .panel{
+
   background:
     linear-gradient(
       145deg,
@@ -330,7 +369,9 @@ button{
       rgba(5,9,20,.95)
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   box-shadow:
     var(--shadow),
@@ -343,7 +384,8 @@ button{
 }
 
 .light .panel{
-  background:rgba(255,255,255,.82);
+  background:
+    rgba(255,255,255,.82);
 }
 
 
@@ -352,24 +394,29 @@ button{
 ========================================================= */
 
 .adventure-panel{
+
   padding:20px;
 
   display:flex;
+
   flex-direction:column;
 
   gap:14px;
 }
 
 .knight-wrap{
+
   height:205px;
 
   display:grid;
+
   place-items:center;
 
   position:relative;
 }
 
 .knight-wrap:after{
+
   content:"";
 
   position:absolute;
@@ -389,6 +436,7 @@ button{
 }
 
 .cube-knight{
+
   position:relative;
 
   width:125px;
@@ -406,12 +454,16 @@ button{
 }
 
 @keyframes knightFloat{
+
   50%{
-    transform:translateY(-8px);
+    transform:
+      translateY(-8px);
   }
+
 }
 
 .helmet{
+
   position:absolute;
 
   width:80px;
@@ -427,7 +479,9 @@ button{
       #171f35
     );
 
-  border:3px solid #9bb4d2;
+  border:
+    3px solid
+    #9bb4d2;
 
   border-radius:12px;
 
@@ -438,6 +492,7 @@ button{
 }
 
 .visor{
+
   position:absolute;
 
   left:10px;
@@ -448,7 +503,9 @@ button{
 
   background:#050812;
 
-  border:2px solid var(--cyan);
+  border:
+    2px solid
+    var(--cyan);
 
   display:flex;
 
@@ -458,15 +515,18 @@ button{
 }
 
 .visor i{
+
   flex:1;
 
   background:var(--cyan);
 
   box-shadow:
-    0 0 8px var(--cyan);
+    0 0 8px
+    var(--cyan);
 }
 
 .horn{
+
   position:absolute;
 
   top:-14px;
@@ -484,12 +544,15 @@ button{
 }
 
 .horn.right{
+
   right:4px;
 
-  transform:skew(18deg);
+  transform:
+    skew(18deg);
 }
 
 .armor{
+
   position:absolute;
 
   left:18px;
@@ -505,7 +568,9 @@ button{
       #111a2e
     );
 
-  border:3px solid #738aa8;
+  border:
+    3px solid
+    #738aa8;
 
   border-radius:
     16px 16px
@@ -513,6 +578,7 @@ button{
 }
 
 .core{
+
   position:absolute;
 
   width:25px;
@@ -521,7 +587,8 @@ button{
   left:29px;
   top:18px;
 
-  background:var(--cyan);
+  background:
+    var(--cyan);
 
   clip-path:
     polygon(
@@ -533,10 +600,12 @@ button{
     );
 
   box-shadow:
-    0 0 25px var(--cyan);
+    0 0 25px
+    var(--cyan);
 }
 
 .shoulder{
+
   position:absolute;
 
   top:5px;
@@ -548,7 +617,9 @@ button{
 
   background:#526681;
 
-  border:2px solid #8ca4c0;
+  border:
+    2px solid
+    #8ca4c0;
 }
 
 .shoulder.left{
@@ -560,6 +631,7 @@ button{
 }
 
 .sword{
+
   position:absolute;
 
   width:10px;
@@ -576,15 +648,18 @@ button{
   right:0;
   top:63px;
 
-  transform:rotate(28deg);
+  transform:
+    rotate(28deg);
 
   box-shadow:
-    0 0 14px var(--cyan);
+    0 0 14px
+    var(--cyan);
 
   border-radius:5px;
 }
 
 .sword:after{
+
   content:"";
 
   position:absolute;
@@ -599,6 +674,7 @@ button{
 }
 
 .shield{
+
   position:absolute;
 
   left:-4px;
@@ -624,15 +700,19 @@ button{
       0 18%
     );
 
-  border:2px solid var(--cyan);
+  border:
+    2px solid
+    var(--cyan);
 
   display:grid;
+
   place-items:center;
 
   color:var(--cyan);
 }
 
 .knight-message{
+
   text-align:center;
 
   color:var(--cyan);
@@ -642,18 +722,27 @@ button{
   min-height:24px;
 }
 
+
+/* =========================================================
+   LEVEL
+========================================================= */
+
 .level-card{
+
   padding:15px;
 
   background:
     rgba(53,231,255,.05);
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:15px;
 }
 
 .level-head{
+
   display:flex;
 
   justify-content:space-between;
@@ -668,12 +757,15 @@ button{
 }
 
 .level-name{
+
   font-weight:800;
 
-  margin:7px 0 10px;
+  margin:
+    7px 0 10px;
 }
 
 .xp-bar{
+
   height:9px;
 
   background:#030711;
@@ -684,6 +776,7 @@ button{
 }
 
 .xp-bar span{
+
   display:block;
 
   height:100%;
@@ -699,7 +792,8 @@ button{
     );
 
   box-shadow:
-    0 0 14px var(--cyan);
+    0 0 14px
+    var(--cyan);
 
   transition:.5s;
 }
@@ -714,6 +808,7 @@ button{
 ========================================================= */
 
 .stats{
+
   display:grid;
 
   grid-template-columns:
@@ -723,6 +818,7 @@ button{
 }
 
 .stats div{
+
   padding:12px;
 
   background:
@@ -734,6 +830,7 @@ button{
 }
 
 .stats span{
+
   display:block;
 
   font-size:9px;
@@ -744,6 +841,7 @@ button{
 }
 
 .stats b{
+
   font-size:20px;
 
   color:var(--gold);
@@ -755,11 +853,14 @@ button{
 ========================================================= */
 
 .wide-btn{
+
   width:100%;
 
   padding:12px;
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:12px;
 
@@ -776,7 +877,9 @@ button{
 }
 
 .wide-btn:hover{
-  border-color:var(--cyan);
+
+  border-color:
+    var(--cyan);
 
   box-shadow:
     0 0 20px
@@ -789,12 +892,14 @@ button{
 ========================================================= */
 
 .calculator{
+
   padding:18px;
 
   position:relative;
 }
 
 .display{
+
   min-height:145px;
 
   padding:18px;
@@ -808,7 +913,9 @@ button{
       #050912 65%
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   box-shadow:
     inset 0 0 35px
@@ -826,6 +933,7 @@ button{
 }
 
 .display:after{
+
   content:"";
 
   position:absolute;
@@ -846,6 +954,7 @@ button{
 }
 
 .display-top{
+
   font-size:18px;
 
   color:var(--muted);
@@ -858,6 +967,7 @@ button{
 }
 
 .display-result{
+
   font-size:
     clamp(36px,7vw,62px);
 
@@ -877,6 +987,7 @@ button{
 }
 
 .memory-indicator{
+
   position:absolute;
 
   top:9px;
@@ -891,10 +1002,11 @@ button{
 
 
 /* =========================================================
-   MEMORY
+   MEMORY BUTTON
 ========================================================= */
 
 .memory-row{
+
   display:grid;
 
   grid-template-columns:
@@ -906,6 +1018,7 @@ button{
 }
 
 .memory-row button{
+
   padding:10px 4px;
 
   font-size:11px;
@@ -917,13 +1030,17 @@ button{
       #080d1b
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:10px;
 }
 
 .memory-row button:hover{
-  border-color:var(--cyan);
+
+  border-color:
+    var(--cyan);
 
   box-shadow:
     0 0 18px
@@ -932,17 +1049,20 @@ button{
 
 
 /* =========================================================
-   SCIENTIFIC / PROGRAMMER / CONVERTER
+   PANELS
 ========================================================= */
 
 .scientific-panel,
 .programmer-panel,
 .converter-panel{
+
   margin:10px 0;
 
   padding:10px;
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:15px;
 
@@ -960,6 +1080,7 @@ button{
 ========================================================= */
 
 .scientific-panel{
+
   display:grid;
 
   grid-template-columns:
@@ -969,11 +1090,12 @@ button{
 }
 
 .scientific-panel button{
+
   padding:9px 3px;
 
   font-size:11px;
 
-  color:#ffffff;
+  color:#35e7ff;
 
   font-weight:800;
 
@@ -984,15 +1106,19 @@ button{
       #080f20
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:10px;
 }
 
 .scientific-panel button:hover{
-  border-color:var(--cyan);
 
-  color:var(--cyan);
+  border-color:
+    var(--cyan);
+
+  color:#5ff0ff;
 
   box-shadow:
     0 0 18px
@@ -1006,6 +1132,7 @@ button{
 
 .base-row,
 .bit-row{
+
   display:grid;
 
   grid-template-columns:
@@ -1017,17 +1144,19 @@ button{
 }
 
 .bit-row{
+
   grid-template-columns:
     repeat(6,1fr);
 }
 
 .base-row button,
 .bit-row button{
+
   padding:8px 3px;
 
   font-size:10px;
 
-  color:#ffffff;
+  color:#35e7ff;
 
   font-weight:900;
 
@@ -1038,16 +1167,20 @@ button{
       #080f20
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:10px;
 }
 
 .base-row button:hover,
 .bit-row button:hover{
-  border-color:var(--cyan);
 
-  color:var(--cyan);
+  border-color:
+    var(--cyan);
+
+  color:#5ff0ff;
 
   box-shadow:
     0 0 18px
@@ -1055,12 +1188,19 @@ button{
 }
 
 .base-row .active{
-  border-color:var(--cyan);
 
-  color:var(--cyan);
+  border-color:
+    var(--cyan);
+
+  color:#5ff0ff;
+
+  box-shadow:
+    0 0 12px
+    rgba(53,231,255,.2);
 }
 
 .programmer-value{
+
   text-align:right;
 
   font-family:monospace;
@@ -1078,6 +1218,7 @@ button{
 ========================================================= */
 
 .converter-controls{
+
   display:grid;
 
   grid-template-columns:
@@ -1091,17 +1232,22 @@ button{
 .converter-controls select,
 .converter-controls input,
 .converter-controls output{
+
   width:100%;
 
   padding:9px;
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:9px;
 
-  background:var(--panel2);
+  background:
+    var(--panel2);
 
-  color:var(--text);
+  color:
+    var(--text);
 }
 
 .converter-controls span{
@@ -1109,13 +1255,16 @@ button{
 }
 
 .converter-controls output{
-  grid-column:1/-1;
+
+  grid-column:
+    1/-1;
 
   text-align:center;
 
   font-weight:800;
 
-  color:var(--cyan);
+  color:
+    var(--cyan);
 }
 
 
@@ -1124,6 +1273,7 @@ button{
 ========================================================= */
 
 .keypad{
+
   display:grid;
 
   grid-template-columns:
@@ -1135,6 +1285,7 @@ button{
 }
 
 .keypad button{
+
   min-height:60px;
 
   border-radius:15px;
@@ -1157,6 +1308,7 @@ button{
   box-shadow:
     inset 0 1px
       rgba(255,255,255,.05),
+
     0 7px 15px
       rgba(0,0,0,.25);
 
@@ -1164,9 +1316,12 @@ button{
 }
 
 .keypad button:hover{
-  transform:translateY(-2px);
 
-  border-color:var(--cyan);
+  transform:
+    translateY(-2px);
+
+  border-color:
+    var(--cyan);
 
   box-shadow:
     0 0 20px
@@ -1174,13 +1329,16 @@ button{
 }
 
 .keypad button:active{
+
   transform:
     translateY(2px)
     scale(.97);
 }
 
 .keypad .operator{
-  color:var(--cyan);
+
+  color:
+    var(--cyan);
 
   background:
     linear-gradient(
@@ -1199,6 +1357,7 @@ button{
 }
 
 .keypad .equal{
+
   color:#031017;
 
   background:
@@ -1208,7 +1367,8 @@ button{
       #65a5ff
     );
 
-  border-color:var(--cyan);
+  border-color:
+    var(--cyan);
 
   box-shadow:
     0 0 25px
@@ -1216,6 +1376,7 @@ button{
 }
 
 .keyboard-ready{
+
   text-align:center;
 
   color:var(--muted);
@@ -1233,6 +1394,7 @@ button{
 ========================================================= */
 
 .footer{
+
   max-width:1250px;
 
   margin:auto;
@@ -1257,6 +1419,7 @@ button{
 ========================================================= */
 
 .modal{
+
   position:fixed;
 
   inset:0;
@@ -1264,7 +1427,8 @@ button{
   background:
     rgba(0,0,0,.7);
 
-  backdrop-filter:blur(7px);
+  backdrop-filter:
+    blur(7px);
 
   z-index:10;
 
@@ -1280,7 +1444,9 @@ button{
 }
 
 .modal-box{
-  width:min(560px,100%);
+
+  width:
+    min(560px,100%);
 
   max-height:80vh;
 
@@ -1293,7 +1459,9 @@ button{
       #070b16
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:20px;
 
@@ -1306,12 +1474,15 @@ button{
 }
 
 .modal-box h2{
+
   margin-top:0;
 
-  color:var(--cyan);
+  color:
+    var(--cyan);
 }
 
 .modal-close{
+
   position:absolute;
 
   right:14px;
@@ -1323,11 +1494,13 @@ button{
 
   font-size:28px;
 
-  color:var(--muted);
+  color:
+    var(--muted);
 }
 
 .history-item,
 .achievement-item{
+
   display:flex;
 
   align-items:center;
@@ -1343,7 +1516,9 @@ button{
   background:
     rgba(255,255,255,.035);
 
-  border:1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
   border-radius:12px;
 }
@@ -1353,7 +1528,9 @@ button{
 }
 
 .history-item button{
+
   border:0;
+
   background:none;
 }
 
@@ -1362,8 +1539,11 @@ button{
 }
 
 .achievement-item small{
+
   display:block;
-  color:var(--muted);
+
+  color:
+    var(--muted);
 }
 
 
@@ -1372,6 +1552,7 @@ button{
 ========================================================= */
 
 .settings-box label{
+
   display:flex;
 
   justify-content:space-between;
@@ -1383,16 +1564,22 @@ button{
   padding:12px 0;
 
   border-bottom:
-    1px solid var(--border);
+    1px solid
+    var(--border);
 }
 
 .setting-toggle,
 .settings-box select{
-  background:var(--panel2);
 
-  border:1px solid var(--border);
+  background:
+    var(--panel2);
 
-  color:var(--text);
+  border:
+    1px solid
+    var(--border);
+
+  color:
+    var(--text);
 
   border-radius:8px;
 
@@ -1400,6 +1587,7 @@ button{
 }
 
 .danger-bg{
+
   background:
     linear-gradient(
       145deg,
@@ -1409,7 +1597,8 @@ button{
 
   color:#ffd8e0;
 
-  border-color:#a83b5b;
+  border-color:
+    #a83b5b;
 
   margin-top:15px;
 }
@@ -1420,6 +1609,7 @@ button{
 ========================================================= */
 
 .toast-container{
+
   position:fixed;
 
   right:20px;
@@ -1435,9 +1625,13 @@ button{
 }
 
 .toast{
-  padding:13px 17px;
 
-  border:1px solid var(--border);
+  padding:
+    13px 17px;
+
+  border:
+    1px solid
+    var(--border);
 
   border-radius:12px;
 
@@ -1446,7 +1640,8 @@ button{
   box-shadow:
     0 10px 30px #000;
 
-  color:var(--text);
+  color:
+    var(--text);
 
   animation:
     toastIn .25s;
@@ -1457,15 +1652,20 @@ button{
 }
 
 @keyframes toastIn{
+
   from{
-    transform:translateX(30px);
+    transform:
+      translateX(30px);
+
     opacity:0;
   }
 
   to{
     transform:none;
+
     opacity:1;
   }
+
 }
 
 
@@ -1474,16 +1674,21 @@ button{
 ========================================================= */
 
 .levelup{
-  animation:levelPulse .8s;
+  animation:
+    levelPulse .8s;
 }
 
 .error{
-  color:var(--danger)!important;
+  color:
+    var(--danger)!important;
 }
 
 @keyframes levelPulse{
+
   50%{
-    transform:scale(1.03);
+
+    transform:
+      scale(1.03);
 
     filter:
       drop-shadow(
@@ -1491,6 +1696,7 @@ button{
         var(--gold)
       );
   }
+
 }
 
 
@@ -1501,6 +1707,7 @@ button{
 @media(max-width:850px){
 
   .layout{
+
     grid-template-columns:
       minmax(300px,520px);
   }
@@ -1514,6 +1721,7 @@ button{
   }
 
   .adventure-panel{
+
     display:grid;
 
     grid-template-columns:
@@ -1540,6 +1748,7 @@ button{
   .footer{
     display:none;
   }
+
 }
 
 
@@ -1557,11 +1766,19 @@ button{
     font-size:8px;
   }
 
+  /* MODE TETAP TERLIHAT DI HP */
   .top-actions select{
+
     display:block;
+
     min-width:135px;
+
     font-size:10px;
-    padding:9px 8px;
+
+    padding:
+      9px 8px;
+
+    color:#35e7ff !important;
   }
 
   .layout{
@@ -1569,6 +1786,7 @@ button{
   }
 
   .calculator{
+
     padding:10px;
 
     border-radius:18px;
@@ -1587,17 +1805,20 @@ button{
   }
 
   .keypad button{
+
     min-height:58px;
 
     border-radius:12px;
   }
 
   .scientific-panel{
+
     grid-template-columns:
       repeat(4,1fr);
   }
 
   .bit-row{
+
     grid-template-columns:
       repeat(3,1fr);
   }
@@ -1611,6 +1832,7 @@ button{
   }
 
   .converter-controls{
+
     grid-template-columns:
       1fr 1fr;
   }
@@ -1618,6 +1840,7 @@ button{
   .footer{
     display:none;
   }
+
 }
 
 
@@ -1630,7 +1853,12 @@ button{
   *,
   *:before,
   *:after{
-    animation-duration:.001ms!important;
-    transition:none!important;
+
+    animation-duration:
+      .001ms!important;
+
+    transition:
+      none!important;
   }
+
 }
