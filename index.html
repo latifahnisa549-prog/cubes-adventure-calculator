@@ -15,12 +15,17 @@
 
   <link rel="stylesheet" href="style.css">
 
+
   <!-- =====================================================
-       TAMBAHAN STYLE UNTUK TOMBOL MODE
+       TAMBAHAN STYLE UNTUK TOMBOL MODE DAN NAMA
   ====================================================== -->
+
   <style>
 
-    /* 4 tombol mode */
+    /* =====================================================
+       4 TOMBOL MODE
+    ====================================================== */
+
     .calculator-modes {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -28,7 +33,9 @@
       margin-bottom: 10px;
     }
 
+
     .calculator-modes .mode-btn {
+
       appearance: none;
       -webkit-appearance: none;
 
@@ -54,8 +61,11 @@
         0 3px 10px rgba(0,0,0,.25);
     }
 
+
     .calculator-modes .mode-btn:hover {
+
       background: #0b1220 !important;
+
       color: #35e7ff !important;
 
       border-color: #35e7ff !important;
@@ -64,8 +74,11 @@
         0 0 14px rgba(53,231,255,.25);
     }
 
+
     .calculator-modes .mode-btn.active {
+
       background: #050812 !important;
+
       color: #35e7ff !important;
 
       border-color: #35e7ff !important;
@@ -75,14 +88,18 @@
         inset 0 0 10px rgba(53,231,255,.05);
     }
 
+
     .calculator-modes .mode-btn:focus {
+
       outline: none;
 
       background: #050812 !important;
+
       color: #35e7ff !important;
 
       border-color: #35e7ff !important;
     }
+
 
 
     /* =====================================================
@@ -90,19 +107,25 @@
     ====================================================== */
 
     .programmer-panel {
+
       margin: 10px 0;
+
       padding: 12px;
 
       border: 1px solid var(--border);
+
       border-radius: 15px;
 
       background: rgba(53,231,255,.025);
     }
 
+
     .programmer-title {
+
       color: #8ca0bd;
 
       font-size: 10px;
+
       font-weight: 800;
 
       letter-spacing: 1.5px;
@@ -110,7 +133,9 @@
       margin: 8px 0;
     }
 
+
     .base-row {
+
       display: grid;
 
       grid-template-columns:
@@ -121,7 +146,9 @@
       margin-bottom: 8px;
     }
 
+
     .bit-row {
+
       display: grid;
 
       grid-template-columns:
@@ -129,6 +156,7 @@
 
       gap: 6px;
     }
+
 
     .base-row button,
     .bit-row button {
@@ -146,12 +174,14 @@
       border-radius: 7px;
 
       font-size: 10px;
+
       font-weight: 700;
 
       cursor: pointer;
 
       transition: all .15s ease;
     }
+
 
     .base-row button:hover,
     .bit-row button:hover {
@@ -166,6 +196,7 @@
         0 0 12px rgba(53,231,255,.2);
     }
 
+
     .base-row button.active {
 
       background: #050812 !important;
@@ -177,6 +208,7 @@
       box-shadow:
         0 0 12px rgba(53,231,255,.25);
     }
+
 
     .programmer-value {
 
@@ -199,18 +231,235 @@
       overflow-x: auto;
     }
 
+
+
+    /* =====================================================
+       NAMA ANGGOTA / DEVELOPMENT TEAM
+    ====================================================== */
+
+    .team-members {
+
+      width: 100%;
+
+      margin: 12px 0 14px;
+
+      padding: 12px;
+
+      box-sizing: border-box;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(8,18,32,.96),
+          rgba(3,8,18,.98)
+        );
+
+      border: 1px solid rgba(53,231,255,.25);
+
+      border-radius: 14px;
+
+      box-shadow:
+        0 0 18px rgba(53,231,255,.08),
+        inset 0 0 18px rgba(53,231,255,.025);
+    }
+
+
+    /* Judul team */
+
+    .team-title {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 7px;
+
+      color: #35e7ff;
+
+      font-size: 10px;
+
+      font-weight: 900;
+
+      letter-spacing: 1.2px;
+
+      text-align: center;
+
+      margin-bottom: 3px;
+    }
+
+
+    .team-title span {
+
+      color: #ffd45a;
+    }
+
+
+    /* Subjudul */
+
+    .team-subtitle {
+
+      text-align: center;
+
+      color: #7186a4;
+
+      font-size: 8px;
+
+      font-weight: 700;
+
+      letter-spacing: 2px;
+
+      margin-bottom: 10px;
+    }
+
+
+    /* Kotak nama */
+
+    .member {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 9px;
+
+      padding: 8px;
+
+      margin-top: 6px;
+
+      background: rgba(255,255,255,.025);
+
+      border: 1px solid rgba(53,231,255,.10);
+
+      border-radius: 8px;
+
+      transition: .2s ease;
+
+      box-sizing: border-box;
+    }
+
+
+    .member:hover {
+
+      transform: translateX(3px);
+
+      border-color: rgba(53,231,255,.45);
+
+      background: rgba(53,231,255,.06);
+
+      box-shadow:
+        0 0 12px rgba(53,231,255,.10);
+    }
+
+
+    /* Nomor */
+
+    .member-number {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      min-width: 28px;
+
+      height: 28px;
+
+      border-radius: 7px;
+
+      background: #07111e;
+
+      border: 1px solid #24415b;
+
+      color: #35e7ff;
+
+      font-family: monospace;
+
+      font-size: 9px;
+
+      font-weight: 900;
+    }
+
+
+    /* Informasi nama */
+
+    .member-info {
+
+      min-width: 0;
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 2px;
+    }
+
+
+    .member-info strong {
+
+      display: block;
+
+      color: #eef7ff;
+
+      font-size: 9px;
+
+      font-weight: 800;
+
+      letter-spacing: .25px;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+
+
+    .member-info small {
+
+      color: #35e7ff;
+
+      font-size: 7px;
+
+      font-weight: 700;
+
+      letter-spacing: 1px;
+    }
+
+
+
+    /* =====================================================
+       RESPONSIVE
+    ====================================================== */
+
     @media(max-width:560px) {
 
       .calculator-modes {
-        grid-template-columns: repeat(2,1fr);
+
+        grid-template-columns:
+          repeat(2,1fr);
       }
+
 
       .base-row {
-        grid-template-columns: repeat(2,1fr);
+
+        grid-template-columns:
+          repeat(2,1fr);
       }
 
+
       .bit-row {
-        grid-template-columns: repeat(2,1fr);
+
+        grid-template-columns:
+          repeat(2,1fr);
+      }
+
+
+      .member-info strong {
+
+        font-size: 8px;
       }
 
     }
@@ -218,6 +467,7 @@
   </style>
 
 </head>
+
 
 
 <body>
@@ -231,6 +481,7 @@
 
   <div class="particles"
        id="particles"></div>
+
 
 
   <!-- =====================================================
@@ -261,6 +512,7 @@
 
 
     <div class="top-actions">
+
 
       <!-- SELECT ASLI UNTUK SCRIPT -->
 
@@ -326,12 +578,15 @@
   <main class="layout">
 
 
+
     <!-- ===================================================
          ADVENTURE PANEL
     ==================================================== -->
 
     <aside class="adventure-panel panel">
 
+
+      <!-- ROBOT KNIGHT -->
 
       <div class="knight-wrap">
 
@@ -348,10 +603,13 @@
 
             </div>
 
+
             <div class="horn left"></div>
+
             <div class="horn right"></div>
 
           </div>
+
 
 
           <div class="armor">
@@ -359,9 +617,11 @@
             <div class="core"></div>
 
             <div class="shoulder left"></div>
+
             <div class="shoulder right"></div>
 
           </div>
+
 
 
           <div class="sword"></div>
@@ -377,6 +637,9 @@
       </div>
 
 
+
+      <!-- PESAN ROBOT -->
+
       <div class="knight-message"
            id="knightMessage">
 
@@ -385,7 +648,135 @@
       </div>
 
 
-      <!-- LEVEL -->
+
+      <!-- =================================================
+           NAMA ANGGOTA
+      ================================================== -->
+
+      <div class="team-members">
+
+
+        <div class="team-title">
+
+          <span>◆</span>
+
+          CUBES ADVENTURE KNIGHT
+
+          <span>◆</span>
+
+        </div>
+
+
+        <div class="team-subtitle">
+
+          DEVELOPMENT TEAM
+
+        </div>
+
+
+
+        <!-- NAMA 1 -->
+
+        <div class="member">
+
+          <div class="member-number">
+            01
+          </div>
+
+          <div class="member-info">
+
+            <strong>
+              NISA LATIFA FAWZIAH
+            </strong>
+
+            <small>
+              CREATIVE DESIGNER
+            </small>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- NAMA 2 -->
+
+        <div class="member">
+
+          <div class="member-number">
+            02
+          </div>
+
+          <div class="member-info">
+
+            <strong>
+              RISMADEA NOLLENCIA BELLA
+            </strong>
+
+            <small>
+              DEVELOPER
+            </small>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- NAMA 3 -->
+
+        <div class="member">
+
+          <div class="member-number">
+            03
+          </div>
+
+          <div class="member-info">
+
+            <strong>
+              ZHARFANI FAA AYYIN
+            </strong>
+
+            <small>
+              PROGRAMMER
+            </small>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- NAMA 4 -->
+
+        <div class="member">
+
+          <div class="member-number">
+            04
+          </div>
+
+          <div class="member-info">
+
+            <strong>
+              ZAHRA TUSYITA
+            </strong>
+
+            <small>
+              PROGRAMMER
+            </small>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- =================================================
+           LEVEL
+      ================================================== -->
 
       <div class="level-card">
 
@@ -418,15 +809,21 @@
 
 
         <small id="xpText">
+
           0 / 100 XP
+
         </small>
 
       </div>
 
 
-      <!-- STATS -->
+
+      <!-- =================================================
+           STATS
+      ================================================== -->
 
       <div class="stats">
+
 
         <div>
 
@@ -441,6 +838,7 @@
         </div>
 
 
+
         <div>
 
           <span>
@@ -453,8 +851,12 @@
 
         </div>
 
+
       </div>
 
+
+
+      <!-- HISTORY -->
 
       <button class="wide-btn"
               id="historyBtn">
@@ -463,6 +865,9 @@
 
       </button>
 
+
+
+      <!-- ACHIEVEMENT -->
 
       <button class="wide-btn"
               id="achievementBtn">
@@ -481,6 +886,7 @@
     ==================================================== -->
 
     <section class="calculator panel">
+
 
 
       <!-- =================================================
@@ -502,6 +908,7 @@
         </button>
 
 
+
         <button class="mode-btn"
                 data-mode="scientific">
 
@@ -514,6 +921,7 @@
         </button>
 
 
+
         <button class="mode-btn"
                 data-mode="programmer">
 
@@ -524,6 +932,7 @@
           </span>
 
         </button>
+
 
 
         <button class="mode-btn"
@@ -738,8 +1147,6 @@
            id="programmerPanel">
 
 
-        <!-- SISTEM BILANGAN -->
-
         <div class="programmer-title">
 
           SISTEM BILANGAN
@@ -783,8 +1190,6 @@
 
 
 
-        <!-- OPERASI BITWISE -->
-
         <div class="programmer-title">
 
           OPERASI BITWISE
@@ -796,51 +1201,38 @@
 
 
           <button data-bit="and">
-
             AND
-
           </button>
 
 
           <button data-bit="or">
-
             OR
-
           </button>
 
 
           <button data-bit="xor">
-
             XOR
-
           </button>
 
 
           <button data-bit="not">
-
             NOT
-
           </button>
 
 
           <button data-bit="shl">
-
             Shift Left
-
           </button>
 
 
           <button data-bit="shr">
-
             Shift Right
-
           </button>
 
 
         </div>
 
 
-        <!-- NILAI PROGRAMMER -->
 
         <div class="programmer-value"
              id="programmerValue">
@@ -1086,6 +1478,7 @@
       </div>
 
 
+
       <div class="keyboard-ready">
 
         ⌨ Keyboard Ready
@@ -1094,7 +1487,6 @@
 
 
     </section>
-
 
   </main>
 
@@ -1370,13 +1762,9 @@
           button.dataset.mode;
 
 
-        /* UBAH SELECT */
-
         calculatorModeSelect.value =
           mode;
 
-
-        /* JALANKAN MODE */
 
         if (typeof changeMode === "function") {
 
@@ -1384,8 +1772,6 @@
 
         }
 
-
-        /* TOMBOL AKTIF */
 
         modeButtons.forEach(btn => {
 
