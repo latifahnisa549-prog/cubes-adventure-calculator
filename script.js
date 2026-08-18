@@ -1,24 +1,37 @@
 /* =========================================================
    CUBES ADVENTURE KNIGHT
    FULL FUNCTIONAL CALCULATOR
-   ========================================================= */
+   BASIC + SCIENTIFIC + PROGRAMMER + CONVERTER
+========================================================= */
 
 "use strict";
 
 /* =========================================================
    ELEMENTS
-   ========================================================= */
+========================================================= */
 
 const expressionEl = document.getElementById("expression");
 const resultEl = document.getElementById("result");
-const memoryIndicator = document.getElementById("memoryIndicator");
 
-const keypad = document.getElementById("keypad");
 const modeSelect = document.getElementById("modeSelect");
 
 const scientificPanel = document.getElementById("scientificPanel");
 const programmerPanel = document.getElementById("programmerPanel");
 const converterPanel = document.getElementById("converterPanel");
+
+const keypad = document.getElementById("keypad");
+
+const memoryIndicator = document.getElementById("memoryIndicator");
+
+const calcCountEl = document.getElementById("calcCount");
+const achievementCountEl = document.getElementById("achievementCount");
+
+const levelText = document.getElementById("levelText");
+const levelName = document.getElementById("levelName");
+const xpBar = document.getElementById("xpBar");
+const xpText = document.getElementById("xpText");
+
+const knightMessage = document.getElementById("knightMessage");
 
 const programmerValue = document.getElementById("programmerValue");
 
@@ -28,357 +41,226 @@ const converterFrom = document.getElementById("converterFrom");
 const converterTo = document.getElementById("converterTo");
 const converterOutput = document.getElementById("converterOutput");
 
-const knightMessage = document.getElementById("knightMessage");
-const levelText = document.getElementById("levelText");
-const levelName = document.getElementById("levelName");
-const xpBar = document.getElementById("xpBar");
-const xpText = document.getElementById("xpText");
-
-const calcCount = document.getElementById("calcCount");
-const achievementCount = document.getElementById("achievementCount");
-
 const toastContainer = document.getElementById("toastContainer");
-
-const historyModal = document.getElementById("historyModal");
-const achievementModal = document.getElementById("achievementModal");
-const settingsModal = document.getElementById("settingsModal");
-
-const historyList = document.getElementById("historyList");
-const achievementList = document.getElementById("achievementList");
-
-const themeBtn = document.getElementById("themeBtn");
-const soundBtn = document.getElementById("soundBtn");
-const settingsBtn = document.getElementById("settingsBtn");
-
-const themeSetting = document.getElementById("themeSetting");
-const soundSetting = document.getElementById("soundSetting");
-const animationSetting = document.getElementById("animationSetting");
-const vibrationSetting = document.getElementById("vibrationSetting");
-const decimalSetting = document.getElementById("decimalSetting");
-
-const historyBtn = document.getElementById("historyBtn");
-const achievementBtn = document.getElementById("achievementBtn");
-
-const clearHistory = document.getElementById("clearHistory");
-const resetData = document.getElementById("resetData");
-
-const backspaceBtn = document.getElementById("backspaceBtn");
 
 
 /* =========================================================
-   STATE
-   ========================================================= */
+   CALCULATOR STATE
+========================================================= */
 
-let expression = "";
-let currentResult = "0";
+let currentValue = "0";
+let previousValue = null;
+let operator = null;
+let waitingForOperand = false;
 
-let memory = Number(localStorage.getItem("knightMemory")) || 0;
+let expressionText = "0";
 
-let calculations =
-    Number(localStorage.getItem("knightCalculations")) || 0;
+let memory = Number(localStorage.getItem("calculatorMemory")) || 0;
+
+let calculationCount =
+    Number(localStorage.getItem("calculationCount")) || 0;
 
 let xp =
-    Number(localStorage.getItem("knightXP")) || 0;
+    Number(localStorage.getItem("calculatorXP")) || 0;
 
 let history =
-    JSON.parse(localStorage.getItem("knightHistory") || "[]");
+    JSON.parse(localStorage.getItem("calculatorHistory") || "[]");
 
 let achievements =
-    JSON.parse(localStorage.getItem("knightAchievements") || "[]");
+    JSON.parse(localStorage.getItem("calculatorAchievements") || "[]");
 
-let settings =
-    JSON.parse(
-        localStorage.getItem("knightSettings") ||
-        JSON.stringify({
-            theme: "dark",
-            sound: false,
-            animation: true,
-            vibration: false,
-            decimals: "auto"
-        })
-    );
+let angleMode = localStorage.getItem("angleMode") || "DEG";
 
 let programmerBase = 10;
 
+let soundEnabled =
+    localStorage.getItem("soundEnabled") === "true";
+
+let darkMode =
+    localStorage.getItem("darkMode") !== "false";
+
+let animationEnabled =
+    localStorage.getItem("animationEnabled") !== "false";
+
+let decimalMode =
+    localStorage.getItem("decimalMode") || "auto";
+
 
 /* =========================================================
-   ACHIEVEMENTS
-   ========================================================= */
+   FORMAT NUMBER
+========================================================= */
 
-const achievementData = [
-    {
-        id: "first",
-        name: "First Calculation",
-        description: "Selesaikan perhitungan pertama",
-        icon: "⚔"
-    },
-    {
-        id: "ten",
-        name: "Knight Calculator",
-        description: "Selesaikan 10 perhitungan",
-        icon: "🛡"
-    },
-    {
-        id: "fifty",
-        name: "Master Knight",
-        description: "Selesaikan 50 perhitungan",
-        icon: "👑"
-    },
-    {
-        id: "scientific",
-        name: "Science Knight",
-        description: "Gunakan mode scientific",
-        icon: "🔬"
-    },
-    {
-        id: "memory",
-        name: "Memory Keeper",
-        description: "Gunakan fitur memory",
-        icon: "🧠"
-    },
-    {
-        id: "programmer",
-        name: "Code Knight",
-        description: "Gunakan mode programmer",
-        icon: "💻"
-    },
-    {
-        id: "converter",
-        name: "World Explorer",
-        description: "Gunakan converter",
-        icon: "🌍"
-    },
-    {
-        id: "history",
-        name: "Historian",
-        description: "Simpan 5 riwayat",
-        icon: "📜"
+function formatNumber(value) {
+
+    if (!Number.isFinite(value)) {
+        return "Error";
     }
-];
+
+    if (decimalMode !== "auto") {
+
+        const places = Number(decimalMode);
+
+        return Number(value.toFixed(places)).toLocaleString(
+            "en-US",
+            {
+                maximumFractionDigits: places
+            }
+        );
+    }
+
+    if (Math.abs(value) >= 1e12 || Math.abs(value) < 1e-9 && value !== 0) {
+        return value.toExponential(8);
+    }
+
+    return Number(value.toFixed(12)).toLocaleString(
+        "en-US",
+        {
+            maximumFractionDigits: 12
+        }
+    );
+}
 
 
 /* =========================================================
-   INIT
-   ========================================================= */
+   RAW NUMBER
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+function rawNumber(text) {
 
-    applySettings();
+    return Number(
+        String(text)
+            .replace(/,/g, "")
+            .trim()
+    );
 
-    updateDisplay();
-
-    updateStats();
-
-    updateLevel();
-
-    renderHistory();
-
-    renderAchievements();
-
-    setupConverter();
-
-    updateConverter();
-
-    knightSpeak("Calculation ready!");
-
-});
+}
 
 
 /* =========================================================
    DISPLAY
-   ========================================================= */
+========================================================= */
 
 function updateDisplay() {
 
-    expressionEl.textContent =
-        expression || "0";
+    expressionEl.textContent = expressionText || "0";
 
-    resultEl.textContent =
-        formatNumber(currentResult);
+    resultEl.textContent = currentValue || "0";
 
     updateMemoryIndicator();
 
     updateProgrammerDisplay();
-
 }
 
 
-function formatNumber(value) {
+function updateMemoryIndicator() {
 
-    if (value === null || value === undefined) {
-        return "0";
-    }
+    if (memoryIndicator) {
 
-    if (typeof value === "number") {
+        memoryIndicator.textContent =
+            memory !== 0 ? "M" : "";
 
-        if (!Number.isFinite(value)) {
-            return "Error";
-        }
-
-        if (settings.decimals === "auto") {
-
-            if (Math.abs(value) >= 1e12 ||
-                (Math.abs(value) > 0 && Math.abs(value) < 1e-8)) {
-
-                return value.toExponential(6);
-            }
-
-            return Number(value.toFixed(10)).toString();
-        }
-
-        return Number(
-            value.toFixed(Number(settings.decimals))
-        ).toString();
-
-    }
-
-    return String(value);
-
-}
-
-
-/* =========================================================
-   CALCULATOR INPUT
-   ========================================================= */
-
-keypad.addEventListener("click", (event) => {
-
-    const button =
-        event.target.closest("button");
-
-    if (!button) return;
-
-    const key =
-        button.dataset.key;
-
-    if (!key) return;
-
-    playSound();
-
-    handleKey(key);
-
-});
-
-
-function handleKey(key) {
-
-    if (key === "AC") {
-
-        clearCalculator();
-
-        return;
-    }
-
-    if (key === "=") {
-
-        calculate();
-
-        return;
-    }
-
-    if (key === "percent") {
-
-        percentage();
-
-        return;
-    }
-
-    if (key === "sign") {
-
-        toggleSign();
-
-        return;
-    }
-
-    if (/^[0-9.]$/.test(key)) {
-
-        inputNumber(key);
-
-        return;
-    }
-
-    if (["+", "-", "*", "/"].includes(key)) {
-
-        inputOperator(key);
-
-        return;
     }
 
 }
 
 
 /* =========================================================
-   NUMBERS
-   ========================================================= */
+   TOAST
+========================================================= */
 
-function inputNumber(number) {
+function showToast(message) {
 
-    if (currentResult !== "0" &&
-        expression === "" &&
-        !expressionEl.textContent.includes("Error")) {
+    if (!toastContainer) return;
 
-        currentResult = "0";
-    }
+    const toast = document.createElement("div");
 
-    if (number === ".") {
+    toast.className = "toast";
 
-        const parts =
-            expression.split(/[+\-*/]/);
+    toast.textContent = message;
 
-        const last =
-            parts[parts.length - 1];
+    toastContainer.appendChild(toast);
 
-        if (last.includes(".")) {
-            return;
-        }
+    setTimeout(() => {
 
-        if (
-            last === "" ||
-            last === undefined
-        ) {
+        toast.remove();
 
-            expression += "0.";
-            updateDisplay();
-            return;
-        }
-    }
-
-    expression += number;
-
-    currentResult = expression;
-
-    updateDisplay();
+    }, 2500);
 
 }
 
 
-function inputOperator(operator) {
+/* =========================================================
+   SOUND
+========================================================= */
 
-    if (!expression) {
+function beep() {
 
-        if (
-            currentResult !== "0" &&
-            !isNaN(Number(currentResult))
-        ) {
+    if (!soundEnabled) return;
 
-            expression = currentResult;
-        } else {
+    try {
 
-            return;
-        }
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if (!AudioContext) return;
+
+        const audio = new AudioContext();
+
+        const oscillator = audio.createOscillator();
+
+        const gain = audio.createGain();
+
+        oscillator.frequency.value = 500;
+
+        gain.gain.value = 0.03;
+
+        oscillator.connect(gain);
+
+        gain.connect(audio.destination);
+
+        oscillator.start();
+
+        oscillator.stop(audio.currentTime + 0.06);
+
+    } catch (error) {
+
+        console.log("Sound unavailable");
+
     }
 
-    if (/[+\-*/]$/.test(expression)) {
+}
 
-        expression =
-            expression.slice(0, -1) + operator;
+
+/* =========================================================
+   INPUT DIGIT
+========================================================= */
+
+function inputDigit(digit) {
+
+    beep();
+
+    if (waitingForOperand || currentValue === "Error") {
+
+        currentValue = digit;
+
+        waitingForOperand = false;
 
     } else {
 
-        expression += operator;
+        if (currentValue === "0") {
+
+            currentValue = digit;
+
+        } else {
+
+            currentValue += digit;
+
+        }
+
     }
 
-    currentResult = expression;
+    expressionText = currentValue;
 
     updateDisplay();
 
@@ -386,14 +268,45 @@ function inputOperator(operator) {
 
 
 /* =========================================================
-   BASIC FUNCTIONS
-   ========================================================= */
+   DECIMAL
+========================================================= */
+
+function inputDecimal() {
+
+    if (waitingForOperand) {
+
+        currentValue = "0.";
+
+        waitingForOperand = false;
+
+    } else if (!currentValue.includes(".")) {
+
+        currentValue += ".";
+
+    }
+
+    expressionText = currentValue;
+
+    updateDisplay();
+
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
 
 function clearCalculator() {
 
-    expression = "";
+    currentValue = "0";
 
-    currentResult = "0";
+    previousValue = null;
+
+    operator = null;
+
+    waitingForOperand = false;
+
+    expressionText = "0";
 
     updateDisplay();
 
@@ -402,77 +315,195 @@ function clearCalculator() {
 }
 
 
+/* =========================================================
+   BACKSPACE
+========================================================= */
+
 function backspace() {
 
-    if (!expression) return;
+    if (
+        waitingForOperand ||
+        currentValue === "Error"
+    ) return;
 
-    expression =
-        expression.slice(0, -1);
+    if (currentValue.length <= 1) {
 
-    currentResult =
-        expression || "0";
+        currentValue = "0";
+
+    } else {
+
+        currentValue = currentValue.slice(0, -1);
+
+    }
+
+    expressionText = currentValue;
 
     updateDisplay();
 
 }
 
 
-function percentage() {
+/* =========================================================
+   SIGN
+========================================================= */
 
-    if (!expression) return;
+function toggleSign() {
 
-    try {
+    if (currentValue === "0") return;
 
-        const value =
-            evaluateExpression(expression);
+    currentValue =
+        currentValue.startsWith("-")
+            ? currentValue.substring(1)
+            : "-" + currentValue;
 
-        expression =
-            String(value / 100);
+    expressionText = currentValue;
 
-        currentResult =
-            expression;
-
-        updateDisplay();
-
-    } catch {
-
-        showError();
-    }
+    updateDisplay();
 
 }
 
 
-function toggleSign() {
+/* =========================================================
+   PERCENT
+========================================================= */
 
-    if (!expression) {
+function percentage() {
 
-        if (currentResult !== "0") {
+    const value = rawNumber(currentValue);
 
-            currentResult =
-                String(-Number(currentResult));
+    currentValue = String(value / 100);
 
-            updateDisplay();
-        }
+    expressionText = currentValue;
+
+    updateDisplay();
+
+}
+
+
+/* =========================================================
+   BASIC OPERATOR
+========================================================= */
+
+function performOperation(nextOperator) {
+
+    const inputValue = rawNumber(currentValue);
+
+    if (!Number.isFinite(inputValue)) {
+
+        showToast("Angka tidak valid");
 
         return;
+
     }
 
-    try {
+    if (operator && previousValue !== null && !waitingForOperand) {
 
-        const value =
-            evaluateExpression(expression);
+        const result = calculate(
+            previousValue,
+            inputValue,
+            operator
+        );
 
-        expression =
-            String(-value);
+        if (result === null) {
 
-        currentResult =
-            expression;
+            currentValue = "Error";
 
-        updateDisplay();
+            expressionText = "Error";
 
-    } catch {
+            updateDisplay();
 
-        showError();
+            return;
+
+        }
+
+        currentValue = String(result);
+
+        previousValue = result;
+
+    } else {
+
+        previousValue = inputValue;
+
+    }
+
+    operator = nextOperator;
+
+    waitingForOperand = true;
+
+    expressionText =
+        formatNumber(previousValue) +
+        " " +
+        operatorSymbol(nextOperator);
+
+    updateDisplay();
+
+}
+
+
+/* =========================================================
+   OPERATOR SYMBOL
+========================================================= */
+
+function operatorSymbol(op) {
+
+    const symbols = {
+
+        "+": "+",
+
+        "-": "−",
+
+        "*": "×",
+
+        "/": "÷",
+
+        "^": "^"
+
+    };
+
+    return symbols[op] || op;
+
+}
+
+
+/* =========================================================
+   CALCULATE
+========================================================= */
+
+function calculate(a, b, op) {
+
+    switch (op) {
+
+        case "+":
+
+            return a + b;
+
+        case "-":
+
+            return a - b;
+
+        case "*":
+
+            return a * b;
+
+        case "/":
+
+            if (b === 0) {
+
+                showToast("Tidak bisa membagi dengan 0");
+
+                return null;
+
+            }
+
+            return a / b;
+
+        case "^":
+
+            return Math.pow(a, b);
+
+        default:
+
+            return b;
 
     }
 
@@ -480,433 +511,488 @@ function toggleSign() {
 
 
 /* =========================================================
-   CALCULATION
-   ========================================================= */
+   EQUAL
+========================================================= */
 
-function calculate() {
+function equals() {
 
-    if (!expression) return;
+    if (
+        previousValue === null ||
+        operator === null
+    ) {
 
-    try {
+        return;
 
-        const original =
-            expression;
+    }
 
-        const value =
-            evaluateExpression(expression);
+    const secondValue = rawNumber(currentValue);
 
-        if (!Number.isFinite(value)) {
+    const result = calculate(
+        previousValue,
+        secondValue,
+        operator
+    );
 
-            throw new Error("Invalid result");
-        }
+    if (result === null) {
 
-        const formatted =
-            formatNumber(value);
+        currentValue = "Error";
 
-        expression =
-            String(value);
-
-        currentResult =
-            String(value);
-
-        calculations++;
-
-        addXP(10);
-
-        addHistory(
-            original,
-            formatted
-        );
-
-        checkAchievements();
-
-        updateStats();
+        expressionText = "Error";
 
         updateDisplay();
 
-        knightSpeak(randomMessage());
-
-    } catch (error) {
-
-        showError();
+        return;
 
     }
 
-}
+    const fullExpression =
+        formatNumber(previousValue) +
+        " " +
+        operatorSymbol(operator) +
+        " " +
+        formatNumber(secondValue);
 
+    currentValue = String(result);
 
-function evaluateExpression(input) {
+    expressionText =
+        fullExpression + " =";
 
-    let exp =
-        String(input)
-            .replace(/×/g, "*")
-            .replace(/÷/g, "/")
-            .replace(/−/g, "-")
-            .replace(/π/g, "Math.PI")
-            .replace(/\be\b/g, "Math.E");
+    previousValue = null;
 
-    /*
-       Hanya mengizinkan karakter matematika.
-    */
+    operator = null;
 
-    if (!/^[0-9+\-*/().\sA-Za-z_]+$/.test(exp)) {
+    waitingForOperand = true;
 
-        throw new Error("Invalid expression");
-    }
-
-    /*
-       Function dipakai hanya untuk ekspresi
-       yang dibuat dari tombol kalkulator.
-    */
-
-    const result =
-        Function(
-            `"use strict"; return (${exp})`
-        )();
-
-    if (typeof result !== "number" ||
-        !Number.isFinite(result)) {
-
-        throw new Error("Invalid result");
-    }
-
-    return result;
-
-}
-
-
-function showError() {
-
-    currentResult = "Error";
-
-    expression = "";
+    calculationCompleted(
+        fullExpression,
+        result
+    );
 
     updateDisplay();
 
-    knightSpeak("Oops! Perhitungan tidak valid.");
+}
+
+
+/* =========================================================
+   CALCULATION COMPLETED
+========================================================= */
+
+function calculationCompleted(
+    expression,
+    result
+) {
+
+    calculationCount++;
+
+    localStorage.setItem(
+        "calculationCount",
+        calculationCount
+    );
+
+    addHistory(
+        expression,
+        result
+    );
+
+    addXP(10);
+
+    knightSpeak("Calculation completed!");
+
+    updateStats();
+
+    checkAchievements();
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function addHistory(
+    expression,
+    result
+) {
+
+    history.unshift({
+
+        expression: expression,
+
+        result: result,
+
+        time: new Date().toLocaleString("id-ID")
+
+    });
+
+    history =
+        history.slice(0, 50);
+
+    localStorage.setItem(
+        "calculatorHistory",
+        JSON.stringify(history)
+    );
 
 }
 
 
 /* =========================================================
    MEMORY
-   ========================================================= */
+========================================================= */
 
-document.querySelectorAll(
-    '[data-action]'
-).forEach(button => {
+function memoryClear() {
 
-    button.addEventListener("click", () => {
+    memory = 0;
 
-        const action =
-            button.dataset.action;
+    saveMemory();
 
-        const value =
-            Number(currentResult);
+    showToast("Memory cleared");
 
-        playSound();
+    updateDisplay();
 
-        if (action === "mc") {
-
-            memory = 0;
-
-            knightSpeak("Memory cleared.");
-
-        }
-
-        if (action === "mr") {
-
-            expression =
-                String(memory);
-
-            currentResult =
-                String(memory);
-
-            knightSpeak("Memory recalled.");
-
-        }
-
-        if (action === "mplus") {
-
-            if (Number.isFinite(value)) {
-
-                memory += value;
-
-                knightSpeak("Memory added.");
-
-            }
-        }
-
-        if (action === "mminus") {
-
-            if (Number.isFinite(value)) {
-
-                memory -= value;
-
-                knightSpeak("Memory reduced.");
-
-            }
-        }
-
-        if (action === "ms") {
-
-            if (Number.isFinite(value)) {
-
-                memory = value;
-
-                unlockAchievement("memory");
-
-                knightSpeak("Value saved to memory.");
-
-            }
-        }
-
-        localStorage.setItem(
-            "knightMemory",
-            memory
-        );
-
-        updateMemoryIndicator();
-
-        updateDisplay();
-
-    });
-
-});
+}
 
 
-function updateMemoryIndicator() {
+function memoryRecall() {
 
-    if (memory !== 0) {
+    currentValue = String(memory);
 
-        memoryIndicator.textContent =
-            `M = ${formatNumber(memory)}`;
+    waitingForOperand = false;
 
-    } else {
+    expressionText = currentValue;
 
-        memoryIndicator.textContent = "";
+    updateDisplay();
+
+}
+
+
+function memoryPlus() {
+
+    const value = rawNumber(currentValue);
+
+    if (Number.isFinite(value)) {
+
+        memory += value;
+
+        saveMemory();
+
+        showToast("Ditambahkan ke memory");
 
     }
+
+    updateDisplay();
+
+}
+
+
+function memoryMinus() {
+
+    const value = rawNumber(currentValue);
+
+    if (Number.isFinite(value)) {
+
+        memory -= value;
+
+        saveMemory();
+
+        showToast("Dikurangi dari memory");
+
+    }
+
+    updateDisplay();
+
+}
+
+
+function memoryStore() {
+
+    const value = rawNumber(currentValue);
+
+    if (Number.isFinite(value)) {
+
+        memory = value;
+
+        saveMemory();
+
+        showToast("Disimpan ke memory");
+
+    }
+
+    updateDisplay();
+
+}
+
+
+function saveMemory() {
+
+    localStorage.setItem(
+        "calculatorMemory",
+        memory
+    );
 
 }
 
 
 /* =========================================================
    SCIENTIFIC
-   ========================================================= */
+========================================================= */
 
-document.querySelectorAll(
-    "[data-scientific]"
-).forEach(button => {
+function getAngleValue(value) {
 
-    button.addEventListener("click", () => {
+    if (angleMode === "DEG") {
 
-        const type =
-            button.dataset.scientific;
-
-        scientificCalculate(type);
-
-        playSound();
-
-    });
-
-});
-
-
-document.querySelectorAll(
-    "[data-constant]"
-).forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        const constant =
-            button.dataset.constant;
-
-        if (constant === "pi") {
-
-            expression += "Math.PI";
-
-        }
-
-        if (constant === "e") {
-
-            expression += "Math.E";
-
-        }
-
-        if (constant === "phi") {
-
-            expression +=
-                "1.618033988749895";
-
-        }
-
-        currentResult = expression;
-
-        updateDisplay();
-
-        unlockAchievement("scientific");
-
-    });
-
-});
-
-
-function scientificCalculate(type) {
-
-    let value;
-
-    try {
-
-        value =
-            expression
-                ? evaluateExpression(expression)
-                : Number(currentResult);
-
-        let result;
-
-        switch (type) {
-
-            case "sin":
-                result =
-                    Math.sin(value * Math.PI / 180);
-                break;
-
-            case "cos":
-                result =
-                    Math.cos(value * Math.PI / 180);
-                break;
-
-            case "tan":
-                result =
-                    Math.tan(value * Math.PI / 180);
-                break;
-
-            case "asin":
-                result =
-                    Math.asin(value) * 180 / Math.PI;
-                break;
-
-            case "acos":
-                result =
-                    Math.acos(value) * 180 / Math.PI;
-                break;
-
-            case "atan":
-                result =
-                    Math.atan(value) * 180 / Math.PI;
-                break;
-
-            case "sqrt":
-                result =
-                    Math.sqrt(value);
-                break;
-
-            case "square":
-                result =
-                    Math.pow(value, 2);
-                break;
-
-            case "inverse":
-                result =
-                    1 / value;
-                break;
-
-            case "log":
-                result =
-                    Math.log10(value);
-                break;
-
-            case "ln":
-                result =
-                    Math.log(value);
-                break;
-
-            case "exp":
-                result =
-                    Math.exp(value);
-                break;
-
-            case "tenpow":
-                result =
-                    Math.pow(10, value);
-                break;
-
-            case "abs":
-                result =
-                    Math.abs(value);
-                break;
-
-            case "random":
-                result =
-                    Math.random();
-                break;
-
-            case "factorial":
-                result =
-                    factorial(value);
-                break;
-
-            case "power":
-
-                /*
-                   xʸ:
-                   value digunakan sebagai x.
-                   User dapat mengetik angka,
-                   tekan xʸ, kemudian angka lagi.
-                */
-
-                expression =
-                    String(value) + "**";
-
-                currentResult =
-                    expression;
-
-                updateDisplay();
-
-                return;
-
-            default:
-                return;
-
-        }
-
-        if (!Number.isFinite(result)) {
-
-            throw new Error();
-
-        }
-
-        expression =
-            String(result);
-
-        currentResult =
-            String(result);
-
-        updateDisplay();
-
-        addXP(5);
-
-        unlockAchievement("scientific");
-
-    } catch {
-
-        showError();
+        return value * Math.PI / 180;
 
     }
+
+    return value;
 
 }
 
 
-function factorial(number) {
+function scientificFunction(type) {
+
+    let value = rawNumber(currentValue);
+
+    if (!Number.isFinite(value)) {
+
+        showToast("Input tidak valid");
+
+        return;
+
+    }
+
+    let result;
+
+
+    switch (type) {
+
+        case "sin":
+
+            result =
+                Math.sin(
+                    getAngleValue(value)
+                );
+
+            break;
+
+
+        case "cos":
+
+            result =
+                Math.cos(
+                    getAngleValue(value)
+                );
+
+            break;
+
+
+        case "tan":
+
+            result =
+                Math.tan(
+                    getAngleValue(value)
+                );
+
+            break;
+
+
+        case "asin":
+
+            result =
+                angleMode === "DEG"
+                    ? Math.asin(value) * 180 / Math.PI
+                    : Math.asin(value);
+
+            break;
+
+
+        case "acos":
+
+            result =
+                angleMode === "DEG"
+                    ? Math.acos(value) * 180 / Math.PI
+                    : Math.acos(value);
+
+            break;
+
+
+        case "atan":
+
+            result =
+                angleMode === "DEG"
+                    ? Math.atan(value) * 180 / Math.PI
+                    : Math.atan(value);
+
+            break;
+
+
+        case "sqrt":
+
+            if (value < 0) {
+
+                showToast("√ angka negatif tidak valid");
+
+                return;
+
+            }
+
+            result = Math.sqrt(value);
+
+            break;
+
+
+        case "square":
+
+            result = value * value;
+
+            break;
+
+
+        case "inverse":
+
+            if (value === 0) {
+
+                showToast("Tidak bisa 1/0");
+
+                return;
+
+            }
+
+            result = 1 / value;
+
+            break;
+
+
+        case "log":
+
+            if (value <= 0) {
+
+                showToast("Log hanya untuk angka > 0");
+
+                return;
+
+            }
+
+            result = Math.log10(value);
+
+            break;
+
+
+        case "ln":
+
+            if (value <= 0) {
+
+                showToast("Ln hanya untuk angka > 0");
+
+                return;
+
+            }
+
+            result = Math.log(value);
+
+            break;
+
+
+        case "exp":
+
+            result = Math.exp(value);
+
+            break;
+
+
+        case "tenpow":
+
+            result = Math.pow(10, value);
+
+            break;
+
+
+        case "factorial":
+
+            result = factorial(value);
+
+            break;
+
+
+        case "abs":
+
+            result = Math.abs(value);
+
+            break;
+
+
+        case "random":
+
+            result = Math.random();
+
+            break;
+
+
+        default:
+
+            return;
+
+    }
+
+
+    if (!Number.isFinite(result)) {
+
+        currentValue = "Error";
+
+        expressionText = "Error";
+
+        updateDisplay();
+
+        return;
+
+    }
+
+
+    const oldValue = currentValue;
+
+    currentValue = String(result);
+
+    expressionText =
+        type + "(" + oldValue + ")";
+
+    calculationCompleted(
+        expressionText,
+        result
+    );
+
+    waitingForOperand = true;
+
+    updateDisplay();
+
+}
+
+
+/* =========================================================
+   FACTORIAL
+========================================================= */
+
+function factorial(value) {
 
     if (
-        number < 0 ||
-        !Number.isInteger(number) ||
-        number > 170
+        value < 0 ||
+        !Number.isInteger(value)
     ) {
 
-        throw new Error();
+        showToast(
+            "Faktorial hanya untuk bilangan bulat positif"
+        );
+
+        return NaN;
+
+    }
+
+    if (value > 170) {
+
+        showToast(
+            "Angka terlalu besar"
+        );
+
+        return Infinity;
 
     }
 
@@ -914,7 +1000,7 @@ function factorial(number) {
 
     for (
         let i = 2;
-        i <= number;
+        i <= value;
         i++
     ) {
 
@@ -928,13 +1014,67 @@ function factorial(number) {
 
 
 /* =========================================================
+   SCIENTIFIC POWER
+========================================================= */
+
+function scientificPower() {
+
+    performOperation("^");
+
+}
+
+
+/* =========================================================
+   CONSTANT
+========================================================= */
+
+function insertConstant(type) {
+
+    let value;
+
+    switch (type) {
+
+        case "pi":
+
+            value = Math.PI;
+
+            break;
+
+        case "e":
+
+            value = Math.E;
+
+            break;
+
+        case "phi":
+
+            value =
+                (1 + Math.sqrt(5)) / 2;
+
+            break;
+
+        default:
+
+            return;
+
+    }
+
+    currentValue = String(value);
+
+    waitingForOperand = false;
+
+    expressionText = type;
+
+    updateDisplay();
+
+}
+
+
+/* =========================================================
    MODE SWITCH
-   ========================================================= */
+========================================================= */
 
-modeSelect.addEventListener("change", () => {
-
-    const mode =
-        modeSelect.value;
+function changeMode(mode) {
 
     scientificPanel.classList.add("hidden");
 
@@ -942,198 +1082,89 @@ modeSelect.addEventListener("change", () => {
 
     converterPanel.classList.add("hidden");
 
+    keypad.style.display = "grid";
+
+
     if (mode === "scientific") {
 
         scientificPanel.classList.remove("hidden");
 
         knightSpeak("Scientific mode activated!");
 
-        unlockAchievement("scientific");
-
     }
 
-    if (mode === "programmer") {
+
+    else if (mode === "programmer") {
 
         programmerPanel.classList.remove("hidden");
 
         knightSpeak("Programmer mode activated!");
 
-        unlockAchievement("programmer");
-
-        updateProgrammerDisplay();
-
     }
 
-    if (mode === "converter") {
+
+    else if (mode === "converter") {
 
         converterPanel.classList.remove("hidden");
 
+        keypad.style.display = "none";
+
         knightSpeak("Converter mode activated!");
 
-        unlockAchievement("converter");
+        setupConverter();
 
     }
 
-});
+
+    else {
+
+        knightSpeak("Basic mode activated!");
+
+    }
+
+
+    updateDisplay();
+
+}
 
 
 /* =========================================================
-   PROGRAMMER
-   ========================================================= */
-
-document.querySelectorAll(
-    "[data-base]"
-).forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        programmerBase =
-            Number(button.dataset.base);
-
-        document.querySelectorAll(
-            "[data-base]"
-        ).forEach(btn =>
-            btn.classList.remove("active")
-        );
-
-        button.classList.add("active");
-
-        updateProgrammerDisplay();
-
-    });
-
-});
-
-
-document.querySelectorAll(
-    "[data-bit]"
-).forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        const operation =
-            button.dataset.bit;
-
-        try {
-
-            let value =
-                Math.trunc(
-                    Number(
-                        expression || currentResult
-                    )
-                );
-
-            let result;
-
-            switch (operation) {
-
-                case "and":
-
-                    expression = "";
-                    knightSpeak("AND: gunakan angka pertama lalu hasil.");
-                    return;
-
-                case "or":
-
-                    knightSpeak("OR operation selected.");
-                    return;
-
-                case "xor":
-
-                    knightSpeak("XOR operation selected.");
-                    return;
-
-                case "not":
-
-                    result = ~value;
-                    break;
-
-                case "shl":
-
-                    result = value << 1;
-                    break;
-
-                case "shr":
-
-                    result = value >> 1;
-                    break;
-
-                default:
-                    return;
-
-            }
-
-            expression =
-                String(result);
-
-            currentResult =
-                String(result);
-
-            updateDisplay();
-
-            updateProgrammerDisplay();
-
-            addXP(5);
-
-        } catch {
-
-            showError();
-
-        }
-
-    });
-
-});
-
+   PROGRAMMER MODE
+========================================================= */
 
 function updateProgrammerDisplay() {
 
     if (!programmerValue) return;
 
-    let value =
-        Number(
-            expression || currentResult
-        );
+    const value = parseInt(
+        rawNumber(currentValue) || 0,
+        10
+    );
 
-    if (!Number.isFinite(value)) {
-
-        programmerValue.textContent =
-            "0";
-
-        return;
-
-    }
-
-    value =
-        Math.trunc(value);
-
-    let output = "";
+    let output = "0";
 
     if (programmerBase === 2) {
 
-        output =
-            (value >>> 0).toString(2);
+        output = value.toString(2);
 
     }
 
-    if (programmerBase === 8) {
+    else if (programmerBase === 8) {
 
-        output =
-            (value >>> 0).toString(8);
-
-    }
-
-    if (programmerBase === 10) {
-
-        output =
-            value.toString(10);
+        output = value.toString(8);
 
     }
 
-    if (programmerBase === 16) {
+    else if (programmerBase === 16) {
 
         output =
-            (value >>> 0).toString(16).toUpperCase();
+            value.toString(16).toUpperCase();
+
+    }
+
+    else {
+
+        output = String(value);
 
     }
 
@@ -1143,176 +1174,401 @@ function updateProgrammerDisplay() {
 }
 
 
-/* =========================================================
-   CONVERTER
-   ========================================================= */
+function changeProgrammerBase(base) {
 
-const units = {
+    programmerBase = Number(base);
+
+    document
+        .querySelectorAll("[data-base]")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                Number(button.dataset.base) ===
+                programmerBase
+            );
+
+        });
+
+    updateProgrammerDisplay();
+
+}
+
+
+/* =========================================================
+   PROGRAMMER OPERATIONS
+========================================================= */
+
+function programmerOperation(type) {
+
+    let a = parseInt(
+        rawNumber(currentValue) || 0,
+        10
+    );
+
+    let b;
+
+    if (
+        type !== "not"
+    ) {
+
+        const input =
+            prompt(
+                "Masukkan angka kedua:"
+            );
+
+        if (input === null) return;
+
+        b = parseInt(
+            input,
+            programmerBase
+        );
+
+        if (Number.isNaN(b)) {
+
+            showToast(
+                "Angka kedua tidak valid"
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    let result;
+
+
+    switch (type) {
+
+        case "and":
+
+            result = a & b;
+
+            break;
+
+        case "or":
+
+            result = a | b;
+
+            break;
+
+        case "xor":
+
+            result = a ^ b;
+
+            break;
+
+        case "not":
+
+            result = ~a;
+
+            break;
+
+        case "shl":
+
+            result = a << b;
+
+            break;
+
+        case "shr":
+
+            result = a >> b;
+
+            break;
+
+        default:
+
+            return;
+
+    }
+
+
+    currentValue = String(result);
+
+    expressionText =
+        type.toUpperCase() +
+        "(" +
+        a +
+        (b !== undefined
+            ? ", " + b
+            : "") +
+        ")";
+
+    calculationCompleted(
+        expressionText,
+        result
+    );
+
+    waitingForOperand = true;
+
+    updateDisplay();
+
+}
+
+
+/* =========================================================
+   CONVERTER DATA
+========================================================= */
+
+const converterUnits = {
 
     length: {
 
-        "Meter (m)": 1,
-        "Kilometer (km)": 1000,
-        "Centimeter (cm)": 0.01,
-        "Millimeter (mm)": 0.001,
-        "Mile (mi)": 1609.344,
-        "Yard (yd)": 0.9144,
-        "Foot (ft)": 0.3048,
-        "Inch (in)": 0.0254
+        units: {
+
+            Meter: 1,
+
+            Kilometer: 1000,
+
+            Centimeter: 0.01,
+
+            Millimeter: 0.001,
+
+            Mile: 1609.344,
+
+            Yard: 0.9144,
+
+            Foot: 0.3048,
+
+            Inch: 0.0254
+
+        }
 
     },
+
 
     weight: {
 
-        "Kilogram (kg)": 1,
-        "Gram (g)": 0.001,
-        "Milligram (mg)": 0.000001,
-        "Ton": 1000,
-        "Pound (lb)": 0.45359237,
-        "Ounce (oz)": 0.0283495231
+        units: {
+
+            Kilogram: 1,
+
+            Gram: 0.001,
+
+            Milligram: 0.000001,
+
+            Ton: 1000,
+
+            Pound: 0.45359237,
+
+            Ounce: 0.0283495231
+
+        }
 
     },
+
+
+    temperature: {
+
+        units: {
+
+            Celsius: "C",
+
+            Fahrenheit: "F",
+
+            Kelvin: "K"
+
+        }
+
+    },
+
 
     area: {
 
-        "m²": 1,
-        "km²": 1000000,
-        "cm²": 0.0001,
-        "Hectare": 10000,
-        "Acre": 4046.8564224
+        units: {
+
+            "Square Meter": 1,
+
+            "Square Kilometer": 1000000,
+
+            "Square Centimeter": 0.0001,
+
+            Hectare: 10000,
+
+            Acre: 4046.8564224
+
+        }
 
     },
+
 
     volume: {
 
-        "Liter": 1,
-        "Milliliter": 0.001,
-        "m³": 1000,
-        "Gallon": 3.785411784,
-        "Cup": 0.2365882365
+        units: {
+
+            Liter: 1,
+
+            Milliliter: 0.001,
+
+            "Cubic Meter": 1000,
+
+            "Cubic Centimeter": 0.001,
+
+            Gallon: 3.785411784,
+
+            Cup: 0.2365882365
+
+        }
 
     },
+
 
     time: {
 
-        "Second": 1,
-        "Minute": 60,
-        "Hour": 3600,
-        "Day": 86400
+        units: {
+
+            Second: 1,
+
+            Minute: 60,
+
+            Hour: 3600,
+
+            Day: 86400,
+
+            Week: 604800
+
+        }
 
     },
+
 
     speed: {
 
-        "m/s": 1,
-        "km/h": 0.2777777778,
-        "mph": 0.44704,
-        "knot": 0.514444
+        units: {
+
+            "Meter/Second": 1,
+
+            "Kilometer/Hour": 0.2777777778,
+
+            "Mile/Hour": 0.44704,
+
+            Knot: 0.5144444444
+
+        }
 
     },
+
 
     data: {
 
-        "Byte": 1,
-        "KB": 1024,
-        "MB": 1024 ** 2,
-        "GB": 1024 ** 3,
-        "TB": 1024 ** 4
+        units: {
+
+            Bit: 1,
+
+            Byte: 8,
+
+            KB: 8000,
+
+            MB: 8000000,
+
+            GB: 8000000000,
+
+            TB: 8000000000000
+
+        }
 
     },
 
+
     energy: {
 
-        "Joule": 1,
-        "Kilojoule": 1000,
-        "Calorie": 4.184,
-        "Kilocalorie": 4184
+        units: {
+
+            Joule: 1,
+
+            Kilojoule: 1000,
+
+            Calorie: 4.184,
+
+            Kilocalorie: 4184,
+
+            "Watt Hour": 3600,
+
+            "Kilowatt Hour": 3600000
+
+        }
 
     }
 
 };
 
 
+/* =========================================================
+   SETUP CONVERTER
+========================================================= */
+
 function setupConverter() {
 
-    updateConverterUnits();
-
-    converterCategory.addEventListener(
-        "change",
-        updateConverterUnits
-    );
-
-    converterInput.addEventListener(
-        "input",
-        updateConverter
-    );
-
-    converterFrom.addEventListener(
-        "change",
-        updateConverter
-    );
-
-    converterTo.addEventListener(
-        "change",
-        updateConverter
-    );
-
-}
-
-
-function updateConverterUnits() {
+    if (!converterCategory) return;
 
     const category =
         converterCategory.value;
+
+    const data =
+        converterUnits[category];
 
     converterFrom.innerHTML = "";
 
     converterTo.innerHTML = "";
 
-    if (category === "temperature") {
 
-        const temperatureUnits = [
-            "Celsius",
-            "Fahrenheit",
-            "Kelvin"
-        ];
+    Object.keys(data.units)
+        .forEach(unit => {
 
-        temperatureUnits.forEach(unit => {
+            const option1 =
+                document.createElement("option");
 
-            converterFrom.add(
-                new Option(unit, unit)
+            option1.value = unit;
+
+            option1.textContent = unit;
+
+            converterFrom.appendChild(
+                option1
             );
 
-            converterTo.add(
-                new Option(unit, unit)
-            );
 
-        });
+            const option2 =
+                document.createElement("option");
 
-    } else {
+            option2.value = unit;
 
-        Object.keys(
-            units[category]
-        ).forEach(unit => {
+            option2.textContent = unit;
 
-            converterFrom.add(
-                new Option(unit, unit)
-            );
-
-            converterTo.add(
-                new Option(unit, unit)
+            converterTo.appendChild(
+                option2
             );
 
         });
+
+
+    if (
+        converterTo.options.length > 1
+    ) {
+
+        converterTo.selectedIndex = 1;
 
     }
 
-    updateConverter();
+
+    convertValue();
 
 }
 
 
-function updateConverter() {
+/* =========================================================
+   CONVERT VALUE
+========================================================= */
+
+function convertValue() {
+
+    if (
+        !converterCategory ||
+        !converterFrom ||
+        !converterTo
+    ) return;
+
 
     const category =
         converterCategory.value;
@@ -1320,47 +1576,71 @@ function updateConverter() {
     const value =
         Number(converterInput.value);
 
-    const from =
-        converterFrom.value;
 
-    const to =
-        converterTo.value;
+    if (!Number.isFinite(value)) {
 
-    if (Number.isNaN(value)) {
+        converterOutput.value = "Error";
 
-        converterOutput.textContent =
-            "0";
+        converterOutput.textContent = "Error";
 
         return;
 
     }
 
+
     let result;
+
+
+    /* TEMPERATURE */
 
     if (category === "temperature") {
 
         result =
             convertTemperature(
                 value,
-                from,
-                to
+                converterFrom.value,
+                converterTo.value
             );
 
-    } else {
+    }
 
-        const base =
-            value * units[category][from];
+    /* OTHER UNITS */
+
+    else {
+
+        const units =
+            converterUnits[category].units;
+
+        const baseValue =
+            value * units[converterFrom.value];
 
         result =
-            base / units[category][to];
+            baseValue /
+            units[converterTo.value];
+
+    }
+
+
+    const formatted =
+        formatNumber(result);
+
+
+    if ("value" in converterOutput) {
+
+        converterOutput.value =
+            formatted;
 
     }
 
     converterOutput.textContent =
-        formatNumber(result);
+        formatted;
 
 }
 
+
+/* =========================================================
+   TEMPERATURE CONVERTER
+========================================================= */
 
 function convertTemperature(
     value,
@@ -1370,33 +1650,43 @@ function convertTemperature(
 
     let celsius;
 
-    if (from === "Celsius") {
+
+    if (from === "C") {
 
         celsius = value;
 
-    } else if (from === "Fahrenheit") {
+    }
+
+    else if (from === "F") {
 
         celsius =
             (value - 32) * 5 / 9;
 
-    } else {
+    }
+
+    else {
 
         celsius =
             value - 273.15;
 
     }
 
-    if (to === "Celsius") {
+
+    if (to === "C") {
 
         return celsius;
 
     }
 
-    if (to === "Fahrenheit") {
 
-        return celsius * 9 / 5 + 32;
+    if (to === "F") {
+
+        return (
+            celsius * 9 / 5
+        ) + 32;
 
     }
+
 
     return celsius + 273.15;
 
@@ -1404,266 +1694,242 @@ function convertTemperature(
 
 
 /* =========================================================
-   HISTORY
-   ========================================================= */
+   HISTORY MODAL
+========================================================= */
 
-function addHistory(
-    calculation,
-    answer
-) {
+function openHistory() {
 
-    history.unshift({
+    const modal =
+        document.getElementById(
+            "historyModal"
+        );
 
-        calculation,
+    const list =
+        document.getElementById(
+            "historyList"
+        );
 
-        answer,
+    list.innerHTML = "";
 
-        date:
-            new Date().toLocaleString("id-ID")
-
-    });
-
-    if (history.length > 50) {
-
-        history.pop();
-
-    }
-
-    localStorage.setItem(
-        "knightHistory",
-        JSON.stringify(history)
-    );
-
-    renderHistory();
-
-    checkAchievements();
-
-}
-
-
-function renderHistory() {
-
-    if (!historyList) return;
 
     if (history.length === 0) {
 
-        historyList.innerHTML =
-            `<div class="empty-history">
-                Belum ada riwayat perhitungan.
-             </div>`;
-
-        return;
+        list.innerHTML =
+            "<p>Belum ada riwayat perhitungan.</p>";
 
     }
 
-    historyList.innerHTML =
-        history.map((item, index) => {
+    else {
 
-            return `
-                <div class="history-item">
-                    <div>
-                        <strong>${escapeHTML(item.calculation)}</strong>
-                        <span>= ${escapeHTML(item.answer)}</span>
-                    </div>
+        history.forEach(item => {
 
-                    <small>${escapeHTML(item.date)}</small>
+            const div =
+                document.createElement("div");
 
-                    <button
-                        class="history-use"
-                        data-index="${index}">
-                        USE
-                    </button>
-                </div>
+            div.className =
+                "history-item";
+
+            div.innerHTML = `
+                <strong>${escapeHTML(item.expression)}</strong>
+                <span>= ${escapeHTML(String(item.result))}</span>
+                <small>${escapeHTML(item.time)}</small>
             `;
 
-        }).join("");
+            list.appendChild(div);
+
+        });
+
+    }
+
+
+    modal.classList.add("show");
 
 }
 
 
-historyList.addEventListener(
-    "click",
-    event => {
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
-        const button =
-            event.target.closest(".history-use");
+function escapeHTML(text) {
 
-        if (!button) return;
+    const div =
+        document.createElement("div");
 
-        const index =
-            Number(button.dataset.index);
+    div.textContent = text;
 
-        const item =
-            history[index];
-
-        if (!item) return;
-
-        expression =
-            item.calculation;
-
-        currentResult =
-            item.answer;
-
-        updateDisplay();
-
-        closeModal(historyModal);
-
-    }
-);
-
-
-if (clearHistory) {
-
-    clearHistory.addEventListener(
-        "click",
-        () => {
-
-            history = [];
-
-            localStorage.setItem(
-                "knightHistory",
-                JSON.stringify(history)
-            );
-
-            renderHistory();
-
-            knightSpeak(
-                "History cleared!"
-            );
-
-        }
-    );
+    return div.innerHTML;
 
 }
 
 
 /* =========================================================
    ACHIEVEMENTS
-   ========================================================= */
+========================================================= */
 
-function unlockAchievement(id) {
+const achievementData = [
 
-    if (achievements.includes(id)) {
+    {
+        id: "first",
+        name: "First Calculation",
+        description: "Selesaikan 1 perhitungan."
+    },
 
-        return;
+    {
+        id: "ten",
+        name: "Knight Calculator",
+        description: "Selesaikan 10 perhitungan."
+    },
 
+    {
+        id: "fifty",
+        name: "Master Knight",
+        description: "Selesaikan 50 perhitungan."
+    },
+
+    {
+        id: "scientific",
+        name: "Science Knight",
+        description: "Gunakan fitur scientific."
+    },
+
+    {
+        id: "programmer",
+        name: "Code Knight",
+        description: "Gunakan fitur programmer."
+    },
+
+    {
+        id: "converter",
+        name: "Converter Knight",
+        description: "Gunakan fitur converter."
     }
 
-    achievements.push(id);
-
-    localStorage.setItem(
-        "knightAchievements",
-        JSON.stringify(achievements)
-    );
-
-    renderAchievements();
-
-    updateStats();
-
-    const achievement =
-        achievementData.find(
-            item => item.id === id
-        );
-
-    if (achievement) {
-
-        showToast(
-            `${achievement.icon} Achievement unlocked: ${achievement.name}`
-        );
-
-    }
-
-}
+];
 
 
 function checkAchievements() {
 
-    if (calculations >= 1) {
+    const unlock = id => {
 
-        unlockAchievement("first");
+        if (!achievements.includes(id)) {
+
+            achievements.push(id);
+
+            localStorage.setItem(
+                "calculatorAchievements",
+                JSON.stringify(achievements)
+            );
+
+            showToast(
+                "🏆 Achievement Unlocked!"
+            );
+
+        }
+
+    };
+
+
+    if (calculationCount >= 1) {
+
+        unlock("first");
 
     }
 
-    if (calculations >= 10) {
 
-        unlockAchievement("ten");
+    if (calculationCount >= 10) {
 
-    }
-
-    if (calculations >= 50) {
-
-        unlockAchievement("fifty");
+        unlock("ten");
 
     }
 
-    if (history.length >= 5) {
 
-        unlockAchievement("history");
+    if (calculationCount >= 50) {
+
+        unlock("fifty");
 
     }
 
-}
 
-
-function renderAchievements() {
-
-    if (!achievementList) return;
-
-    achievementList.innerHTML =
-        achievementData.map(item => {
-
-            const unlocked =
-                achievements.includes(item.id);
-
-            return `
-                <div class="achievement-item ${
-                    unlocked ? "unlocked" : "locked"
-                }">
-
-                    <div class="achievement-icon">
-                        ${unlocked ? item.icon : "🔒"}
-                    </div>
-
-                    <div>
-                        <strong>
-                            ${item.name}
-                        </strong>
-
-                        <p>
-                            ${item.description}
-                        </p>
-                    </div>
-
-                </div>
-            `;
-
-        }).join("");
+    updateStats();
 
 }
 
 
 /* =========================================================
-   XP / LEVEL
-   ========================================================= */
+   ACHIEVEMENT MODAL
+========================================================= */
+
+function openAchievements() {
+
+    const modal =
+        document.getElementById(
+            "achievementModal"
+        );
+
+    const list =
+        document.getElementById(
+            "achievementList"
+        );
+
+    list.innerHTML = "";
+
+
+    achievementData.forEach(item => {
+
+        const unlocked =
+            achievements.includes(item.id);
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "achievement-item";
+
+
+        div.innerHTML = `
+            <strong>
+                ${unlocked ? "🏆" : "🔒"}
+                ${item.name}
+            </strong>
+            <p>${item.description}</p>
+        `;
+
+
+        list.appendChild(div);
+
+    });
+
+
+    modal.classList.add("show");
+
+}
+
+
+/* =========================================================
+   XP
+========================================================= */
 
 function addXP(amount) {
 
     xp += amount;
 
-    while (xp >= 100) {
+    let level =
+        Math.floor(xp / 100) + 1;
 
-        xp -= 100;
 
-        knightSpeak(
-            "LEVEL UP! ⚔️"
-        );
+    if (level > 99) {
+
+        level = 99;
 
     }
 
+
     localStorage.setItem(
-        "knightXP",
+        "calculatorXP",
         xp
     );
+
 
     updateLevel();
 
@@ -1673,517 +1939,80 @@ function addXP(amount) {
 function updateLevel() {
 
     const level =
-        Math.floor(
-            calculations / 5
-        ) + 1;
+        Math.min(
+            99,
+            Math.floor(xp / 100) + 1
+        );
 
-    const names = [
-        "Novice Knight",
-        "Apprentice Knight",
-        "Warrior Knight",
-        "Elite Knight",
-        "Master Knight",
-        "Legendary Knight"
-    ];
 
-    const name =
-        names[
-            Math.min(
-                level - 1,
-                names.length - 1
-            )
-        ];
+    const currentXP =
+        xp % 100;
+
 
     levelText.textContent =
-        `LEVEL ${String(level).padStart(2, "0")}`;
+        "LEVEL " +
+        String(level).padStart(2, "0");
+
+
+    const names = [
+
+        "Novice Knight",
+
+        "Apprentice Knight",
+
+        "Skilled Knight",
+
+        "Elite Knight",
+
+        "Master Knight",
+
+        "Legendary Knight"
+
+    ];
+
+
+    const nameIndex =
+        Math.min(
+            names.length - 1,
+            Math.floor(level / 5)
+        );
+
 
     levelName.textContent =
-        name;
+        names[nameIndex];
+
 
     xpBar.style.width =
-        `${xp}%`;
+        currentXP + "%";
+
 
     xpText.textContent =
-        `${xp} / 100 XP`;
+        currentXP +
+        " / 100 XP";
 
 }
 
 
 /* =========================================================
    STATS
-   ========================================================= */
+========================================================= */
 
 function updateStats() {
 
-    calcCount.textContent =
-        calculations;
+    calcCountEl.textContent =
+        calculationCount;
 
-    achievementCount.textContent =
+    achievementCountEl.textContent =
         achievements.length;
 
-    localStorage.setItem(
-        "knightCalculations",
-        calculations
-    );
+    updateLevel();
 
 }
-
-
-/* =========================================================
-   KEYBOARD
-   ========================================================= */
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        const key =
-            event.key;
-
-        if (
-            /^[0-9]$/.test(key) ||
-            ["+", "-", "*", "/", "."].includes(key)
-        ) {
-
-            event.preventDefault();
-
-            handleKey(key);
-
-            return;
-        }
-
-        if (key === "Enter" || key === "=") {
-
-            event.preventDefault();
-
-            calculate();
-
-            return;
-        }
-
-        if (key === "Escape") {
-
-            clearCalculator();
-
-            return;
-        }
-
-        if (key === "Backspace") {
-
-            event.preventDefault();
-
-            backspace();
-
-            return;
-        }
-
-        if (key === "%") {
-
-            percentage();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   BACKSPACE BUTTON
-   ========================================================= */
-
-if (backspaceBtn) {
-
-    backspaceBtn.addEventListener(
-        "click",
-        () => {
-
-            playSound();
-
-            backspace();
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MODALS
-   ========================================================= */
-
-function openModal(modal) {
-
-    if (!modal) return;
-
-    modal.classList.add("show");
-
-}
-
-
-function closeModal(modal) {
-
-    if (!modal) return;
-
-    modal.classList.remove("show");
-
-}
-
-
-historyBtn.addEventListener(
-    "click",
-    () => {
-
-        renderHistory();
-
-        openModal(historyModal);
-
-    }
-);
-
-
-achievementBtn.addEventListener(
-    "click",
-    () => {
-
-        renderAchievements();
-
-        openModal(achievementModal);
-
-    }
-);
-
-
-settingsBtn.addEventListener(
-    "click",
-    () => {
-
-        updateSettingsUI();
-
-        openModal(settingsModal);
-
-    }
-);
-
-
-document.querySelectorAll(
-    "[data-close]"
-).forEach(button => {
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            const id =
-                button.dataset.close;
-
-            closeModal(
-                document.getElementById(id)
-            );
-
-        }
-    );
-
-});
-
-
-document.querySelectorAll(
-    ".modal"
-).forEach(modal => {
-
-    modal.addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target === modal
-            ) {
-
-                closeModal(modal);
-
-            }
-
-        }
-    );
-
-});
-
-
-/* =========================================================
-   THEME
-   ========================================================= */
-
-themeBtn.addEventListener(
-    "click",
-    toggleTheme
-);
-
-
-themeSetting.addEventListener(
-    "click",
-    toggleTheme
-);
-
-
-function toggleTheme() {
-
-    settings.theme =
-        settings.theme === "dark"
-            ? "light"
-            : "dark";
-
-    saveSettings();
-
-    applySettings();
-
-    updateSettingsUI();
-
-}
-
-
-function applySettings() {
-
-    document.body.classList.toggle(
-        "light-theme",
-        settings.theme === "light"
-    );
-
-    document.body.classList.toggle(
-        "no-animation",
-        !settings.animation
-    );
-
-    themeBtn.textContent =
-        settings.theme === "dark"
-            ? "🌙"
-            : "☀️";
-
-    soundBtn.textContent =
-        settings.sound
-            ? "🔊"
-            : "🔇";
-
-}
-
-
-/* =========================================================
-   SOUND
-   ========================================================= */
-
-soundBtn.addEventListener(
-    "click",
-    () => {
-
-        settings.sound =
-            !settings.sound;
-
-        saveSettings();
-
-        applySettings();
-
-        updateSettingsUI();
-
-        knightSpeak(
-            settings.sound
-                ? "Sound ON"
-                : "Sound OFF"
-        );
-
-    }
-);
-
-
-soundSetting.addEventListener(
-    "click",
-    () => {
-
-        settings.sound =
-            !settings.sound;
-
-        saveSettings();
-
-        applySettings();
-
-        updateSettingsUI();
-
-    }
-);
-
-
-function playSound() {
-
-    if (!settings.sound) return;
-
-    try {
-
-        const AudioContext =
-            window.AudioContext ||
-            window.webkitAudioContext;
-
-        if (!AudioContext) return;
-
-        const audio =
-            new AudioContext();
-
-        const oscillator =
-            audio.createOscillator();
-
-        const gain =
-            audio.createGain();
-
-        oscillator.connect(gain);
-
-        gain.connect(audio.destination);
-
-        oscillator.frequency.value =
-            650;
-
-        gain.gain.value =
-            0.03;
-
-        oscillator.start();
-
-        oscillator.stop(
-            audio.currentTime + 0.05
-        );
-
-    } catch {
-
-        // ignore sound errors
-
-    }
-
-}
-
-
-/* =========================================================
-   SETTINGS
-   ========================================================= */
-
-animationSetting.addEventListener(
-    "click",
-    () => {
-
-        settings.animation =
-            !settings.animation;
-
-        saveSettings();
-
-        applySettings();
-
-        updateSettingsUI();
-
-    }
-);
-
-
-vibrationSetting.addEventListener(
-    "click",
-    () => {
-
-        settings.vibration =
-            !settings.vibration;
-
-        saveSettings();
-
-        updateSettingsUI();
-
-    }
-);
-
-
-decimalSetting.addEventListener(
-    "change",
-    () => {
-
-        settings.decimals =
-            decimalSetting.value;
-
-        saveSettings();
-
-        updateDisplay();
-
-        updateConverter();
-
-    }
-);
-
-
-function updateSettingsUI() {
-
-    themeSetting.textContent =
-        settings.theme === "dark"
-            ? "Dark"
-            : "Light";
-
-    soundSetting.textContent =
-        settings.sound
-            ? "ON"
-            : "OFF";
-
-    animationSetting.textContent =
-        settings.animation
-            ? "ON"
-            : "OFF";
-
-    vibrationSetting.textContent =
-        settings.vibration
-            ? "ON"
-            : "OFF";
-
-    decimalSetting.value =
-        settings.decimals;
-
-}
-
-
-/* =========================================================
-   RESET DATA
-   ========================================================= */
-
-resetData.addEventListener(
-    "click",
-    () => {
-
-        const confirmReset =
-            confirm(
-                "Reset semua data calculator?"
-            );
-
-        if (!confirmReset) return;
-
-        localStorage.removeItem(
-            "knightMemory"
-        );
-
-        localStorage.removeItem(
-            "knightCalculations"
-        );
-
-        localStorage.removeItem(
-            "knightXP"
-        );
-
-        localStorage.removeItem(
-            "knightHistory"
-        );
-
-        localStorage.removeItem(
-            "knightAchievements"
-        );
-
-        localStorage.removeItem(
-            "knightSettings"
-        );
-
-        location.reload();
-
-    }
-);
 
 
 /* =========================================================
    KNIGHT MESSAGE
-   ========================================================= */
+========================================================= */
 
 function knightSpeak(message) {
 
@@ -2195,119 +2024,873 @@ function knightSpeak(message) {
 }
 
 
-function randomMessage() {
+/* =========================================================
+   MODAL CLOSE
+========================================================= */
 
-    const messages = [
+document
+    .querySelectorAll("[data-close]")
+    .forEach(button => {
 
-        "Calculation successful! ⚔️",
+        button.addEventListener(
+            "click",
+            () => {
 
-        "Excellent work, Knight! 🛡️",
+                const id =
+                    button.dataset.close;
 
-        "The answer is ready! ✨",
+                document
+                    .getElementById(id)
+                    .classList.remove("show");
 
-        "Mission completed! 🚀",
+            }
+        );
 
-        "Power calculation complete! ⚡",
+    });
 
-        "Well calculated, Knight! 👑"
 
-    ];
+/* =========================================================
+   KEYPAD CLICK
+========================================================= */
 
-    return messages[
-        Math.floor(
-            Math.random() *
-            messages.length
+document
+    .querySelectorAll("[data-key]")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const key =
+                    button.dataset.key;
+
+                if (/^\d$/.test(key)) {
+
+                    inputDigit(key);
+
+                    return;
+
+                }
+
+
+                switch (key) {
+
+                    case ".":
+
+                        inputDecimal();
+
+                        break;
+
+
+                    case "AC":
+
+                        clearCalculator();
+
+                        break;
+
+
+                    case "percent":
+
+                        percentage();
+
+                        break;
+
+
+                    case "sign":
+
+                        toggleSign();
+
+                        break;
+
+
+                    case "+":
+
+                    case "-":
+
+                    case "*":
+
+                    case "/":
+
+                        performOperation(key);
+
+                        break;
+
+
+                    case "=":
+
+                        equals();
+
+                        break;
+
+                }
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   MEMORY BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll("[data-action]")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                switch (
+                    button.dataset.action
+                ) {
+
+                    case "mc":
+
+                        memoryClear();
+
+                        break;
+
+                    case "mr":
+
+                        memoryRecall();
+
+                        break;
+
+                    case "mplus":
+
+                        memoryPlus();
+
+                        break;
+
+                    case "mminus":
+
+                        memoryMinus();
+
+                        break;
+
+                    case "ms":
+
+                        memoryStore();
+
+                        break;
+
+                }
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   BACKSPACE
+========================================================= */
+
+document
+    .getElementById("backspaceBtn")
+    .addEventListener(
+        "click",
+        backspace
+    );
+
+
+/* =========================================================
+   SCIENTIFIC BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll("[data-scientific]")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const type =
+                    button.dataset.scientific;
+
+                if (type === "power") {
+
+                    scientificPower();
+
+                }
+
+                else {
+
+                    scientificFunction(type);
+
+                }
+
+
+                if (
+                    !achievements.includes(
+                        "scientific"
+                    )
+                ) {
+
+                    achievements.push(
+                        "scientific"
+                    );
+
+                    localStorage.setItem(
+                        "calculatorAchievements",
+                        JSON.stringify(
+                            achievements
+                        )
+                    );
+
+                }
+
+                updateStats();
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   CONSTANT BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll("[data-constant]")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                insertConstant(
+                    button.dataset.constant
+                );
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   PROGRAMMER BASE
+========================================================= */
+
+document
+    .querySelectorAll("[data-base]")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                changeProgrammerBase(
+                    button.dataset.base
+                );
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   PROGRAMMER BIT
+========================================================= */
+
+document
+    .querySelectorAll("[data-bit]")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                programmerOperation(
+                    button.dataset.bit
+                );
+
+
+                if (
+                    !achievements.includes(
+                        "programmer"
+                    )
+                ) {
+
+                    achievements.push(
+                        "programmer"
+                    );
+
+                    localStorage.setItem(
+                        "calculatorAchievements",
+                        JSON.stringify(
+                            achievements
+                        )
+                    );
+
+                }
+
+                updateStats();
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   MODE SELECT
+========================================================= */
+
+modeSelect.addEventListener(
+    "change",
+    () => {
+
+        changeMode(
+            modeSelect.value
+        );
+
+    }
+);
+
+
+/* =========================================================
+   CONVERTER
+========================================================= */
+
+converterCategory.addEventListener(
+    "change",
+    () => {
+
+        setupConverter();
+
+        unlockConverterAchievement();
+
+    }
+);
+
+
+converterInput.addEventListener(
+    "input",
+    convertValue
+);
+
+
+converterFrom.addEventListener(
+    "change",
+    convertValue
+);
+
+
+converterTo.addEventListener(
+    "change",
+    convertValue
+);
+
+
+function unlockConverterAchievement() {
+
+    if (
+        !achievements.includes(
+            "converter"
         )
-    ];
+    ) {
+
+        achievements.push(
+            "converter"
+        );
+
+        localStorage.setItem(
+            "calculatorAchievements",
+            JSON.stringify(
+                achievements
+            )
+        );
+
+        updateStats();
+
+        showToast(
+            "🏆 Converter Knight unlocked!"
+        );
+
+    }
 
 }
 
 
 /* =========================================================
-   TOAST
-   ========================================================= */
+   HISTORY BUTTON
+========================================================= */
 
-function showToast(message) {
+document
+    .getElementById("historyBtn")
+    .addEventListener(
+        "click",
+        openHistory
+    );
 
-    if (!toastContainer) return;
 
-    const toast =
-        document.createElement("div");
+/* =========================================================
+   ACHIEVEMENT BUTTON
+========================================================= */
 
-    toast.className =
-        "toast";
+document
+    .getElementById("achievementBtn")
+    .addEventListener(
+        "click",
+        openAchievements
+    );
 
-    toast.textContent =
-        message;
 
-    toastContainer.appendChild(toast);
+/* =========================================================
+   CLEAR HISTORY
+========================================================= */
 
-    setTimeout(() => {
+document
+    .getElementById("clearHistory")
+    .addEventListener(
+        "click",
+        () => {
 
-        toast.remove();
+            history = [];
 
-    }, 3000);
+            localStorage.removeItem(
+                "calculatorHistory"
+            );
+
+            openHistory();
+
+            showToast(
+                "History berhasil dihapus"
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+const themeBtn =
+    document.getElementById("themeBtn");
+
+themeBtn.addEventListener(
+    "click",
+    toggleTheme
+);
+
+
+function toggleTheme() {
+
+    darkMode = !darkMode;
+
+    document.body.classList.toggle(
+        "light-mode",
+        !darkMode
+    );
+
+    localStorage.setItem(
+        "darkMode",
+        darkMode
+    );
+
+    themeBtn.textContent =
+        darkMode ? "🌙" : "☀️";
 
 }
+
+
+/* =========================================================
+   SOUND BUTTON
+========================================================= */
+
+const soundBtn =
+    document.getElementById("soundBtn");
+
+soundBtn.addEventListener(
+    "click",
+    () => {
+
+        soundEnabled =
+            !soundEnabled;
+
+        localStorage.setItem(
+            "soundEnabled",
+            soundEnabled
+        );
+
+        soundBtn.textContent =
+            soundEnabled
+                ? "🔊"
+                : "🔇";
+
+        showToast(
+            soundEnabled
+                ? "Sound ON"
+                : "Sound OFF"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+document
+    .getElementById("settingsBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            document
+                .getElementById(
+                    "settingsModal"
+                )
+                .classList.add("show");
+
+        }
+    );
+
+
+const themeSetting =
+    document.getElementById(
+        "themeSetting"
+    );
+
+
+themeSetting.addEventListener(
+    "click",
+    () => {
+
+        toggleTheme();
+
+        themeSetting.textContent =
+            darkMode ? "Dark" : "Light";
+
+    }
+);
+
+
+const soundSetting =
+    document.getElementById(
+        "soundSetting"
+    );
+
+
+soundSetting.addEventListener(
+    "click",
+    () => {
+
+        soundEnabled =
+            !soundEnabled;
+
+        localStorage.setItem(
+            "soundEnabled",
+            soundEnabled
+        );
+
+        soundSetting.textContent =
+            soundEnabled
+                ? "ON"
+                : "OFF";
+
+        soundBtn.textContent =
+            soundEnabled
+                ? "🔊"
+                : "🔇";
+
+    }
+);
+
+
+/* =========================================================
+   DECIMAL SETTINGS
+========================================================= */
+
+document
+    .getElementById("decimalSetting")
+    .addEventListener(
+        "change",
+        event => {
+
+            decimalMode =
+                event.target.value;
+
+            localStorage.setItem(
+                "decimalMode",
+                decimalMode
+            );
+
+            updateDisplay();
+
+        }
+    );
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+const animationSetting =
+    document.getElementById(
+        "animationSetting"
+    );
+
+
+animationSetting.addEventListener(
+    "click",
+    () => {
+
+        animationEnabled =
+            !animationEnabled;
+
+        document.body.classList.toggle(
+            "no-animation",
+            !animationEnabled
+        );
+
+        animationSetting.textContent =
+            animationEnabled
+                ? "ON"
+                : "OFF";
+
+        localStorage.setItem(
+            "animationEnabled",
+            animationEnabled
+        );
+
+    }
+);
 
 
 /* =========================================================
    VIBRATION
-   ========================================================= */
+========================================================= */
 
-function vibrate() {
-
-    if (
-        settings.vibration &&
-        navigator.vibrate
-    ) {
-
-        navigator.vibrate(30);
-
-    }
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-   ========================================================= */
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-/* =========================================================
-   SAVE SETTINGS
-   ========================================================= */
-
-function saveSettings() {
-
-    localStorage.setItem(
-        "knightSettings",
-        JSON.stringify(settings)
+const vibrationSetting =
+    document.getElementById(
+        "vibrationSetting"
     );
 
-}
+
+let vibrationEnabled = false;
 
 
-/* =========================================================
-   EXTRA BUTTON FEEDBACK
-   ========================================================= */
-
-document.addEventListener(
+vibrationSetting.addEventListener(
     "click",
     () => {
 
-        vibrate();
+        vibrationEnabled =
+            !vibrationEnabled;
+
+        vibrationSetting.textContent =
+            vibrationEnabled
+                ? "ON"
+                : "OFF";
 
     }
 );
+
+
+/* =========================================================
+   RESET DATA
+========================================================= */
+
+document
+    .getElementById("resetData")
+    .addEventListener(
+        "click",
+        () => {
+
+            const confirmReset =
+                confirm(
+                    "Yakin ingin menghapus semua data calculator?"
+                );
+
+            if (!confirmReset) return;
+
+
+            localStorage.removeItem(
+                "calculatorMemory"
+            );
+
+            localStorage.removeItem(
+                "calculationCount"
+            );
+
+            localStorage.removeItem(
+                "calculatorXP"
+            );
+
+            localStorage.removeItem(
+                "calculatorHistory"
+            );
+
+            localStorage.removeItem(
+                "calculatorAchievements"
+            );
+
+            location.reload();
+
+        }
+    );
+
+
+/* =========================================================
+   KEYBOARD SUPPORT
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        const key = event.key;
+
+
+        if (/^\d$/.test(key)) {
+
+            inputDigit(key);
+
+            return;
+
+        }
+
+
+        if (key === ".") {
+
+            inputDecimal();
+
+            return;
+
+        }
+
+
+        if (
+            ["+", "-", "*", "/"].includes(key)
+        ) {
+
+            performOperation(key);
+
+            return;
+
+        }
+
+
+        if (key === "Enter" || key === "=") {
+
+            event.preventDefault();
+
+            equals();
+
+            return;
+
+        }
+
+
+        if (key === "Backspace") {
+
+            backspace();
+
+            return;
+
+        }
+
+
+        if (
+            key === "Escape" ||
+            key.toLowerCase() === "c"
+        ) {
+
+            clearCalculator();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INIT THEME
+========================================================= */
+
+document.body.classList.toggle(
+    "light-mode",
+    !darkMode
+);
+
+themeBtn.textContent =
+    darkMode ? "🌙" : "☀️";
+
+
+/* =========================================================
+   INIT SOUND
+========================================================= */
+
+soundBtn.textContent =
+    soundEnabled
+        ? "🔊"
+        : "🔇";
+
+
+/* =========================================================
+   INIT SETTINGS
+========================================================= */
+
+document
+    .getElementById("decimalSetting")
+    .value =
+    decimalMode;
+
+
+document
+    .getElementById("animationSetting")
+    .textContent =
+    animationEnabled
+        ? "ON"
+        : "OFF";
+
+
+document
+    .getElementById("soundSetting")
+    .textContent =
+    soundEnabled
+        ? "ON"
+        : "OFF";
+
+
+document
+    .getElementById("themeSetting")
+    .textContent =
+    darkMode
+        ? "Dark"
+        : "Light";
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+setupConverter();
+
+updateStats();
+
+updateDisplay();
+
+changeMode("basic");
+
+
+/* =========================================================
+   START MESSAGE
+========================================================= */
+
+setTimeout(() => {
+
+    knightSpeak(
+        "Choose your calculator mode!"
+    );
+
+}, 500);
