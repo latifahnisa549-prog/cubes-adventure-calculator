@@ -9,18 +9,55 @@
         content="width=device-width, initial-scale=1.0">
 
   <meta name="description"
-        content="Cubes Adventure Knight - Futuristic Calculator">
+        content="Astronaut Adventure - Futuristic Calculator">
 
-  <title>Cubes Adventure Knight | Calculator</title>
+  <title>Astronaut Adventure | Calculator</title>
 
   <link rel="stylesheet" href="style.css">
 
 
   <!-- =====================================================
-       TAMBAHAN STYLE UNTUK TOMBOL MODE DAN NAMA
+       TAMBAHAN STYLE UNTUK TOMBOL MODE, LOGO, DAN ASTRONAUT
   ====================================================== -->
 
   <style>
+
+    /* =====================================================
+       LOGO CONTAINER & STYLING
+    ====================================================== */
+
+    .brand-logos {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-logo {
+      width: 32px;
+      height: 32px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid rgba(53,231,255,.4);
+      box-shadow: 0 0 8px rgba(53,231,255,.2);
+    }
+
+    .team-logos-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .team-logo-img {
+      width: 38px;
+      height: 38px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 1px solid #35e7ff;
+      box-shadow: 0 0 10px rgba(53,231,255,.3);
+    }
+
 
     /* =====================================================
        4 TOMBOL MODE
@@ -429,6 +466,153 @@
     }
 
 
+    /* =====================================================
+       DESAIN ROBOT ASTRONAUT
+    ====================================================== */
+
+    .knight-wrap {
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      padding: 10px 0;
+    }
+
+    .astronaut-robot {
+
+      position: relative;
+
+      width: 70px;
+
+      height: 90px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+    }
+
+    .astro-helmet {
+
+      width: 44px;
+
+      height: 40px;
+
+      background: #eef7ff;
+
+      border-radius: 50% 50% 40% 40%;
+
+      border: 2px solid #35e7ff;
+
+      position: relative;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      box-shadow: 0 0 12px rgba(53,231,255,.4);
+    }
+
+    .astro-visor {
+
+      width: 32px;
+
+      height: 22px;
+
+      background: linear-gradient(135deg, #091a30, #1d4373);
+
+      border-radius: 12px;
+
+      border: 1px solid #35e7ff;
+
+      box-shadow: inset 0 0 6px #35e7ff;
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+    .astro-visor::after {
+
+      content: '';
+
+      position: absolute;
+
+      top: 3px;
+
+      left: 3px;
+
+      width: 8px;
+
+      height: 4px;
+
+      background: rgba(255, 255, 255, 0.7);
+
+      border-radius: 50%;
+    }
+
+    .astro-body {
+
+      width: 48px;
+
+      height: 38px;
+
+      background: #d8e6f5;
+
+      border-radius: 10px;
+
+      border: 2px solid #24415b;
+
+      margin-top: -2px;
+
+      position: relative;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+    }
+
+    .astro-chest-badge {
+
+      width: 14px;
+
+      height: 14px;
+
+      background: #35e7ff;
+
+      border-radius: 50%;
+
+      box-shadow: 0 0 8px #35e7ff;
+    }
+
+    .astro-backpack {
+
+      position: absolute;
+
+      width: 58px;
+
+      height: 30px;
+
+      background: #112236;
+
+      border-radius: 6px;
+
+      top: 42px;
+
+      z-index: -1;
+
+      border: 1px solid #35e7ff;
+    }
+
+
 
     /* =====================================================
        RESPONSIVE
@@ -492,14 +676,16 @@
 
     <div class="brand">
 
-      <div class="brand-cube">
-        ◆
+      <div class="brand-logos">
+        <img src="logo1.jpeg" alt="Logo 1" class="app-logo">
+        <img src="logo2.jpeg" alt="Logo 2" class="app-logo">
+        <img src="logo3.jpeg" alt="Logo 3" class="app-logo">
       </div>
 
       <div>
 
         <h1>
-          CUBES ADVENTURE KNIGHT
+          ASTRONAUT ADVENTURE
         </h1>
 
         <span>
@@ -586,51 +772,21 @@
     <aside class="adventure-panel panel">
 
 
-      <!-- ROBOT KNIGHT -->
+      <!-- ASTRONAUT ROBOT -->
 
       <div class="knight-wrap">
 
-        <div class="cube-knight"
-             id="knight">
+        <div class="astronaut-robot" id="knight">
 
+          <div class="astro-backpack"></div>
 
-          <div class="helmet">
-
-            <div class="visor">
-
-              <i></i>
-              <i></i>
-
-            </div>
-
-
-            <div class="horn left"></div>
-
-            <div class="horn right"></div>
-
+          <div class="astro-helmet">
+            <div class="astro-visor"></div>
           </div>
 
-
-
-          <div class="armor">
-
-            <div class="core"></div>
-
-            <div class="shoulder left"></div>
-
-            <div class="shoulder right"></div>
-
+          <div class="astro-body">
+            <div class="astro-chest-badge"></div>
           </div>
-
-
-
-          <div class="sword"></div>
-
-
-          <div class="shield">
-            ◆
-          </div>
-
 
         </div>
 
@@ -643,7 +799,7 @@
       <div class="knight-message"
            id="knightMessage">
 
-        Calculation ready!
+        System online! Ready for launch!
 
       </div>
 
@@ -655,12 +811,18 @@
 
       <div class="team-members">
 
+        <div class="team-logos-row">
+          <img src="logo1.jpeg" alt="Logo 1" class="team-logo-img">
+          <img src="logo2.jpeg" alt="Logo 2" class="team-logo-img">
+          <img src="logo3.jpeg" alt="Logo 3" class="team-logo-img">
+        </div>
+
 
         <div class="team-title">
 
           <span>◆</span>
 
-          CUBES ADVENTURE KNIGHT
+          ASTRONAUT ADVENTURE
 
           <span>◆</span>
 
@@ -783,7 +945,7 @@
         <div class="level-head">
 
           <span>
-            ⚔ KNIGHT LEVEL
+            🚀 ASTRONAUT LEVEL
           </span>
 
           <strong id="levelText">
@@ -796,7 +958,7 @@
         <div class="level-name"
              id="levelName">
 
-          Novice Knight
+          Space Cadet
 
         </div>
 
@@ -861,7 +1023,7 @@
       <button class="wide-btn"
               id="historyBtn">
 
-        ⚔ ADVENTURE HISTORY
+        🚀 MISSION HISTORY
 
       </button>
 
@@ -1501,7 +1663,7 @@
 
     <span>
 
-      CUBES ADVENTURE KNIGHT
+      ASTRONAUT ADVENTURE CALCULATOR
 
     </span>
 
@@ -1549,7 +1711,7 @@
 
       <h2>
 
-        ⚔ Adventure History
+        🚀 Mission History
 
       </h2>
 
