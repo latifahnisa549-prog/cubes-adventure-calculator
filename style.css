@@ -17,10 +17,6 @@
   --shadow:0 18px 60px rgba(0,0,0,.45);
 }
 
-/* =========================================================
-   GLOBAL
-========================================================= */
-
 *{
   box-sizing:border-box;
 }
@@ -31,18 +27,20 @@ body{
   font-family:Inter,Segoe UI,Arial,sans-serif;
   color:var(--text);
   background:
-    radial-gradient(
-      circle at 50% 10%,
-      #15244d 0,
-      #080c19 38%,
-      #03050c 100%
-    );
+    radial-gradient(circle at 50% 10%,#15244d 0,#080c19 38%,#03050c 100%);
   overflow-x:hidden;
 }
 
-/* =========================================================
-   FORM
-========================================================= */
+body.light{
+  --bg:#eaf5ff;
+  --panel:#f7fbff;
+  --panel2:#e5f0fb;
+  --text:#102039;
+  --muted:#52657d;
+  --border:rgba(34,100,160,.22);
+
+  background:linear-gradient(135deg,#dff4ff,#f8f4ff);
+}
 
 button,
 select,
@@ -55,60 +53,6 @@ button{
   cursor:pointer;
 }
 
-/* =========================================================
-   MODE SELECT
-   BASIC / SCIENTIFIC / PROGRAMMER / CONVERTER
-========================================================= */
-
-.top-actions select#modeSelect{
-  min-width:165px;
-  padding:11px 38px 11px 14px;
-
-  /* WARNA TULISAN BIRU */
-  color:#35e7ff !important;
-
-  /* BACKGROUND DARK */
-  background:#081426 !important;
-
-  /* BORDER BIRU */
-  border:2px solid #35e7ff !important;
-
-  border-radius:12px;
-
-  font-weight:900;
-  font-size:13px;
-  letter-spacing:1px;
-
-  outline:none;
-
-  box-shadow:
-    0 0 10px rgba(53,231,255,.12),
-    inset 0 0 10px rgba(53,231,255,.04);
-
-  appearance:auto;
-}
-
-/* Saat select dipilih */
-.top-actions select#modeSelect:focus{
-  color:#35e7ff !important;
-  border-color:#35e7ff !important;
-
-  box-shadow:
-    0 0 18px rgba(53,231,255,.35);
-}
-
-/* WARNA TULISAN OPTION */
-.top-actions select#modeSelect option{
-  color:#35e7ff !important;
-  background:#081426 !important;
-  font-weight:800;
-}
-
-/* OPTION YANG SEDANG DIPILIH */
-.top-actions select#modeSelect option:checked{
-  color:#ffffff !important;
-  background:#12345a !important;
-}
 
 /* =========================================================
    BACKGROUND
@@ -121,15 +65,8 @@ button{
   opacity:.2;
 
   background-image:
-    linear-gradient(
-      var(--cyan) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      var(--cyan) 1px,
-      transparent 1px
-    );
+    linear-gradient(var(--cyan) 1px,transparent 1px),
+    linear-gradient(90deg,var(--cyan) 1px,transparent 1px);
 
   background-size:55px 55px;
 
@@ -167,6 +104,7 @@ button{
   }
 }
 
+
 /* =========================================================
    TOP BAR
 ========================================================= */
@@ -174,6 +112,7 @@ button{
 .topbar{
   position:relative;
   z-index:2;
+
   max-width:1250px;
   margin:auto;
   padding:20px;
@@ -214,8 +153,88 @@ button{
   gap:8px;
 }
 
+
 /* =========================================================
-   BUTTON HEADER
+   MODE SELECT
+   BASIC / SCIENTIFIC / PROGRAMMER / CONVERTER
+========================================================= */
+
+.top-actions select{
+  min-width:175px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #101d38,
+      #070d1c
+    );
+
+  border:2px solid var(--cyan);
+  border-radius:12px;
+
+  padding:10px 38px 10px 14px;
+
+  /* INI WARNA TULISAN MODE */
+  color:#35e7ff !important;
+
+  font-weight:900;
+  letter-spacing:1.2px;
+
+  text-shadow:
+    0 0 8px rgba(53,231,255,.8);
+
+  box-shadow:
+    0 0 12px rgba(53,231,255,.12),
+    inset 0 0 15px rgba(53,231,255,.04);
+
+  outline:none;
+
+  cursor:pointer;
+
+  appearance:auto;
+}
+
+
+/* warna tulisan ketika dropdown dibuka */
+.top-actions select option{
+  background:#08101f !important;
+  color:#35e7ff !important;
+  font-weight:800;
+}
+
+
+/* mode yang sedang dipilih */
+.top-actions select option:checked{
+  background:#102b4a !important;
+  color:#35e7ff !important;
+}
+
+
+/* saat mouse diarahkan */
+.top-actions select:hover{
+  color:#35e7ff !important;
+
+  border-color:#35e7ff;
+
+  box-shadow:
+    0 0 20px rgba(53,231,255,.3),
+    inset 0 0 15px rgba(53,231,255,.08);
+}
+
+
+/* saat select fokus */
+.top-actions select:focus{
+  color:#35e7ff !important;
+
+  border-color:#35e7ff;
+
+  box-shadow:
+    0 0 25px rgba(53,231,255,.4);
+}
+
+
+/* =========================================================
+   ICON BUTTON
 ========================================================= */
 
 .icon-btn{
@@ -226,7 +245,7 @@ button{
   background:
     linear-gradient(
       145deg,
-      #101c32,
+      var(--panel2),
       #080d1b
     );
 
@@ -237,8 +256,11 @@ button{
 
 .icon-btn:hover{
   border-color:var(--cyan);
-  box-shadow:0 0 18px rgba(53,231,255,.2);
+
+  box-shadow:
+    0 0 18px rgba(53,231,255,.2);
 }
+
 
 /* =========================================================
    LAYOUT
@@ -253,17 +275,11 @@ button{
   padding:10px 20px 25px;
 
   display:grid;
-  grid-template-columns:
-    320px
-    minmax(320px,520px);
+  grid-template-columns:320px minmax(320px,520px);
 
   justify-content:center;
   gap:22px;
 }
-
-/* =========================================================
-   PANEL
-========================================================= */
 
 .panel{
   background:
@@ -284,12 +300,18 @@ button{
   backdrop-filter:blur(15px);
 }
 
+.light .panel{
+  background:rgba(255,255,255,.82);
+}
+
+
 /* =========================================================
    ADVENTURE PANEL
 ========================================================= */
 
 .adventure-panel{
   padding:20px;
+
   display:flex;
   flex-direction:column;
   gap:14px;
@@ -297,38 +319,45 @@ button{
 
 .knight-wrap{
   height:205px;
+
   display:grid;
   place-items:center;
+
   position:relative;
 }
 
 .knight-wrap:after{
   content:"";
+
   position:absolute;
 
   width:170px;
   height:30px;
 
   border-radius:50%;
+
   bottom:5px;
 
   background:var(--cyan);
+
   filter:blur(25px);
+
   opacity:.25;
 }
 
 .cube-knight{
   position:relative;
+
   width:125px;
   height:175px;
 
   filter:
     drop-shadow(
-      0 0 16px
-      rgba(53,231,255,.25)
+      0 0 16px rgba(53,231,255,.25)
     );
 
-  animation:knightFloat 3s ease-in-out infinite;
+  animation:
+    knightFloat 3s ease-in-out infinite;
 }
 
 @keyframes knightFloat{
@@ -354,6 +383,7 @@ button{
     );
 
   border:3px solid #9bb4d2;
+
   border-radius:12px;
 
   box-shadow:
@@ -371,27 +401,34 @@ button{
   height:17px;
 
   background:#050812;
+
   border:2px solid var(--cyan);
 
   display:flex;
+
   gap:8px;
+
   padding:3px 8px;
 }
 
 .visor i{
   flex:1;
+
   background:var(--cyan);
+
   box-shadow:0 0 8px var(--cyan);
 }
 
 .horn{
   position:absolute;
+
   top:-14px;
 
   width:18px;
   height:22px;
 
   background:#687891;
+
   transform:skew(-18deg);
 }
 
@@ -421,6 +458,7 @@ button{
     );
 
   border:3px solid #738aa8;
+
   border-radius:16px 16px 9px 9px;
 }
 
@@ -458,6 +496,7 @@ button{
   border-radius:8px;
 
   background:#526681;
+
   border:2px solid #8ca4c0;
 }
 
@@ -489,6 +528,7 @@ button{
   transform:rotate(28deg);
 
   box-shadow:0 0 14px var(--cyan);
+
   border-radius:5px;
 }
 
@@ -542,14 +582,13 @@ button{
 
 .knight-message{
   text-align:center;
+
   color:var(--cyan);
+
   font-weight:700;
+
   min-height:24px;
 }
-
-/* =========================================================
-   LEVEL
-========================================================= */
 
 .level-card{
   padding:15px;
@@ -557,14 +596,17 @@ button{
   background:rgba(53,231,255,.05);
 
   border:1px solid var(--border);
+
   border-radius:15px;
 }
 
 .level-head{
   display:flex;
+
   justify-content:space-between;
 
   font-size:11px;
+
   color:var(--muted);
 }
 
@@ -574,18 +616,23 @@ button{
 
 .level-name{
   font-weight:800;
+
   margin:7px 0 10px;
 }
 
 .xp-bar{
   height:9px;
+
   background:#030711;
+
   border-radius:20px;
+
   overflow:hidden;
 }
 
 .xp-bar span{
   display:block;
+
   height:100%;
   width:0;
 
@@ -606,13 +653,11 @@ button{
   color:var(--muted);
 }
 
-/* =========================================================
-   STATS
-========================================================= */
-
 .stats{
   display:grid;
+
   grid-template-columns:1fr 1fr;
+
   gap:10px;
 }
 
@@ -622,30 +667,33 @@ button{
   background:rgba(255,255,255,.025);
 
   border-radius:12px;
+
   text-align:center;
 }
 
 .stats span{
   display:block;
+
   font-size:9px;
+
   color:var(--muted);
+
   letter-spacing:1px;
 }
 
 .stats b{
   font-size:20px;
+
   color:var(--gold);
 }
 
-/* =========================================================
-   WIDE BUTTON
-========================================================= */
-
 .wide-btn{
   width:100%;
+
   padding:12px;
 
   border:1px solid var(--border);
+
   border-radius:12px;
 
   background:
@@ -656,18 +704,17 @@ button{
     );
 
   font-weight:800;
-  letter-spacing:1px;
 
-  color:#35e7ff;
+  letter-spacing:1px;
 }
 
 .wide-btn:hover{
   border-color:var(--cyan);
 
   box-shadow:
-    0 0 20px
-    rgba(53,231,255,.18);
+    0 0 20px rgba(53,231,255,.18);
 }
+
 
 /* =========================================================
    CALCULATOR
@@ -675,12 +722,9 @@ button{
 
 .calculator{
   padding:18px;
+
   position:relative;
 }
-
-/* =========================================================
-   DISPLAY
-========================================================= */
 
 .display{
   min-height:145px;
@@ -699,14 +743,16 @@ button{
   border:1px solid var(--border);
 
   box-shadow:
-    inset 0 0 35px
-    rgba(53,231,255,.05);
+    inset 0 0 35px rgba(53,231,255,.05);
 
   display:flex;
+
   flex-direction:column;
+
   justify-content:flex-end;
 
   position:relative;
+
   overflow:hidden;
 }
 
@@ -714,6 +760,7 @@ button{
   content:"";
 
   position:absolute;
+
   inset:0;
 
   background:
@@ -730,9 +777,11 @@ button{
 
 .display-top{
   font-size:18px;
+
   color:var(--muted);
 
   white-space:nowrap;
+
   overflow-x:auto;
 
   text-align:right;
@@ -742,16 +791,17 @@ button{
   font-size:clamp(36px,7vw,62px);
 
   font-weight:800;
+
   text-align:right;
 
   letter-spacing:-2px;
 
   overflow-x:auto;
+
   white-space:nowrap;
 
   text-shadow:
-    0 0 18px
-    rgba(53,231,255,.3);
+    0 0 18px rgba(53,231,255,.3);
 }
 
 .memory-indicator{
@@ -763,8 +813,10 @@ button{
   color:var(--gold);
 
   font-size:10px;
+
   font-weight:800;
 }
+
 
 /* =========================================================
    MEMORY
@@ -783,9 +835,8 @@ button{
 
 .memory-row button{
   padding:10px 4px;
-  font-size:11px;
 
-  color:#35e7ff;
+  font-size:11px;
 
   background:
     linear-gradient(
@@ -794,7 +845,10 @@ button{
       #080d1b
     );
 
+  color:#35e7ff !important;
+
   border:1px solid var(--border);
+
   border-radius:10px;
 }
 
@@ -802,21 +856,23 @@ button{
   border-color:var(--cyan);
 
   box-shadow:
-    0 0 18px
-    rgba(53,231,255,.2);
+    0 0 18px rgba(53,231,255,.2);
 }
 
+
 /* =========================================================
-   PANELS
+   SCIENTIFIC
 ========================================================= */
 
 .scientific-panel,
 .programmer-panel,
 .converter-panel{
   margin:10px 0;
+
   padding:10px;
 
   border:1px solid var(--border);
+
   border-radius:15px;
 
   background:rgba(53,231,255,.025);
@@ -825,10 +881,6 @@ button{
 .hidden{
   display:none!important;
 }
-
-/* =========================================================
-   SCIENTIFIC
-========================================================= */
 
 .scientific-panel{
   display:grid;
@@ -844,8 +896,6 @@ button{
 
   font-size:11px;
 
-  color:#35e7ff;
-
   background:
     linear-gradient(
       145deg,
@@ -853,7 +903,10 @@ button{
       #080d1b
     );
 
+  color:#35e7ff !important;
+
   border:1px solid var(--border);
+
   border-radius:10px;
 }
 
@@ -861,9 +914,9 @@ button{
   border-color:var(--cyan);
 
   box-shadow:
-    0 0 18px
-    rgba(53,231,255,.2);
+    0 0 18px rgba(53,231,255,.2);
 }
+
 
 /* =========================================================
    PROGRAMMER
@@ -892,8 +945,6 @@ button{
 
   font-size:10px;
 
-  color:#35e7ff;
-
   background:
     linear-gradient(
       145deg,
@@ -901,7 +952,10 @@ button{
       #080d1b
     );
 
+  color:#35e7ff !important;
+
   border:1px solid var(--border);
+
   border-radius:10px;
 }
 
@@ -910,13 +964,16 @@ button{
   border-color:var(--cyan);
 
   box-shadow:
-    0 0 18px
-    rgba(53,231,255,.2);
+    0 0 18px rgba(53,231,255,.2);
 }
 
 .base-row .active{
   border-color:var(--cyan);
-  color:#ffffff;
+
+  color:#35e7ff !important;
+
+  box-shadow:
+    0 0 15px rgba(53,231,255,.2);
 }
 
 .programmer-value{
@@ -931,6 +988,7 @@ button{
   overflow:auto;
 }
 
+
 /* =========================================================
    CONVERTER
 ========================================================= */
@@ -938,8 +996,7 @@ button{
 .converter-controls{
   display:grid;
 
-  grid-template-columns:
-    1fr 1fr;
+  grid-template-columns:1fr 1fr;
 
   gap:7px;
 
@@ -954,15 +1011,16 @@ button{
   padding:9px;
 
   border:1px solid var(--border);
+
   border-radius:9px;
 
   background:var(--panel2);
-  color:var(--cyan);
+
+  color:var(--text);
 }
 
 .converter-controls span{
   text-align:center;
-  color:var(--cyan);
 }
 
 .converter-controls output{
@@ -974,6 +1032,7 @@ button{
 
   color:var(--cyan);
 }
+
 
 /* =========================================================
    KEYPAD
@@ -1004,10 +1063,11 @@ button{
       #080e1e
     );
 
-  color:#35e7ff;
-
   font-size:21px;
+
   font-weight:700;
+
+  color:#35e7ff;
 
   box-shadow:
     inset 0 1px rgba(255,255,255,.05),
@@ -1022,8 +1082,7 @@ button{
   border-color:var(--cyan);
 
   box-shadow:
-    0 0 20px
-    rgba(53,231,255,.18);
+    0 0 20px rgba(53,231,255,.18);
 }
 
 .keypad button:active{
@@ -1064,13 +1123,8 @@ button{
   border-color:var(--cyan);
 
   box-shadow:
-    0 0 25px
-    rgba(53,231,255,.35);
+    0 0 25px rgba(53,231,255,.35);
 }
-
-/* =========================================================
-   KEYBOARD
-========================================================= */
 
 .keyboard-ready{
   text-align:center;
@@ -1084,6 +1138,7 @@ button{
   letter-spacing:1px;
 }
 
+
 /* =========================================================
    FOOTER
 ========================================================= */
@@ -1093,7 +1148,8 @@ button{
 
   margin:auto;
 
-  padding:12px 20px 24px;
+  padding:
+    12px 20px 24px;
 
   display:flex;
 
@@ -1105,6 +1161,7 @@ button{
 
   letter-spacing:1px;
 }
+
 
 /* =========================================================
    MODAL
@@ -1154,12 +1211,12 @@ button{
 
   position:relative;
 
-  box-shadow:
-    0 20px 80px #000;
+  box-shadow:0 20px 80px #000;
 }
 
 .modal-box h2{
   margin-top:0;
+
   color:var(--cyan);
 }
 
@@ -1170,6 +1227,7 @@ button{
   top:10px;
 
   background:none;
+
   border:0;
 
   font-size:28px;
@@ -1182,11 +1240,13 @@ button{
   display:flex;
 
   align-items:center;
+
   justify-content:space-between;
 
   gap:10px;
 
   padding:13px;
+
   margin:8px 0;
 
   background:rgba(255,255,255,.035);
@@ -1202,6 +1262,7 @@ button{
 
 .history-item button{
   border:0;
+
   background:none;
 }
 
@@ -1211,8 +1272,10 @@ button{
 
 .achievement-item small{
   display:block;
+
   color:var(--muted);
 }
+
 
 /* =========================================================
    SETTINGS
@@ -1222,6 +1285,7 @@ button{
   display:flex;
 
   justify-content:space-between;
+
   align-items:center;
 
   gap:10px;
@@ -1237,7 +1301,7 @@ button{
 
   border:1px solid var(--border);
 
-  color:var(--cyan);
+  color:var(--cyan) !important;
 
   border-radius:8px;
 
@@ -1259,6 +1323,7 @@ button{
   margin-top:15px;
 }
 
+
 /* =========================================================
    TOAST
 ========================================================= */
@@ -1272,6 +1337,7 @@ button{
   z-index:30;
 
   display:flex;
+
   flex-direction:column;
 
   gap:8px;
@@ -1309,10 +1375,6 @@ button{
   }
 }
 
-/* =========================================================
-   ANIMATION
-========================================================= */
-
 .levelup{
   animation:levelPulse .8s;
 }
@@ -1327,14 +1389,14 @@ button{
 
     filter:
       drop-shadow(
-        0 0 25px
-        var(--gold)
+        0 0 25px var(--gold)
       );
   }
 }
 
+
 /* =========================================================
-   TABLET
+   RESPONSIVE
 ========================================================= */
 
 @media(max-width:850px){
@@ -1354,7 +1416,9 @@ button{
 
   .adventure-panel{
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+      1fr 1fr;
   }
 
   .knight-wrap{
@@ -1379,9 +1443,6 @@ button{
   }
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
 
 @media(max-width:560px){
 
@@ -1397,15 +1458,20 @@ button{
     font-size:8px;
   }
 
-  /* MODE SELECT TETAP MUNCUL DI HP */
-  .top-actions select#modeSelect{
+  /*
+    Jangan sembunyikan mode select.
+    Supaya BASIC/SCIENTIFIC/PROGRAMMER/CONVERTER
+    tetap bisa dipilih di HP.
+  */
+
+  .top-actions select{
     display:block;
+
     min-width:145px;
 
     font-size:11px;
-    padding:9px 8px;
 
-    color:#35e7ff !important;
+    padding:9px 8px;
   }
 
   .top-actions{
@@ -1414,7 +1480,8 @@ button{
 
   .icon-btn{
     min-width:38px;
-    padding:8px;
+
+    padding:8px 9px;
   }
 
   .layout{
@@ -1423,6 +1490,7 @@ button{
 
   .calculator{
     padding:10px;
+
     border-radius:18px;
   }
 
@@ -1440,6 +1508,7 @@ button{
 
   .keypad button{
     min-height:58px;
+
     border-radius:12px;
   }
 
@@ -1471,6 +1540,7 @@ button{
   }
 }
 
+
 /* =========================================================
    REDUCED MOTION
 ========================================================= */
@@ -1481,6 +1551,7 @@ button{
   *:before,
   *:after{
     animation-duration:.001ms!important;
+
     transition:none!important;
   }
 }
