@@ -1,219 +1,1150 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Cubes Adventure Knight - Futuristic Calculator">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <meta name="description"
+        content="Cubes Adventure Knight - Futuristic Calculator">
+
   <title>Cubes Adventure Knight | Calculator</title>
+
   <link rel="stylesheet" href="style.css">
+
 </head>
+
+
 <body>
+
+  <!-- ==========================================
+       BACKGROUND
+  =========================================== -->
+
   <div class="bg-grid"></div>
+
   <div class="particles" id="particles"></div>
 
+
+  <!-- ==========================================
+       TOP BAR
+  =========================================== -->
+
   <header class="topbar">
+
     <div class="brand">
+
       <div class="brand-cube">◆</div>
+
       <div>
+
         <h1>CUBES ADVENTURE KNIGHT</h1>
+
         <span>FUTURISTIC CALCULATOR</span>
+
       </div>
+
     </div>
+
 
     <div class="top-actions">
-      <select id="modeSelect" aria-label="Calculator mode">
+
+      <!--
+        SELECT ASLI TETAP DIPERTAHANKAN
+        AGAR SCRIPT.JS TETAP BERFUNGSI
+      -->
+
+      <select id="modeSelect"
+              aria-label="Calculator mode"
+              style="display:none;">
+
         <option value="basic">BASIC</option>
+
         <option value="scientific">SCIENTIFIC</option>
+
         <option value="programmer">PROGRAMMER</option>
+
         <option value="converter">CONVERTER</option>
+
       </select>
-      <button class="icon-btn" id="themeBtn" title="Ganti tema">🌙</button>
-      <button class="icon-btn" id="soundBtn" title="Suara">🔇</button>
-      <button class="icon-btn" id="settingsBtn" title="Settings">⚙</button>
+
+
+      <button class="icon-btn"
+              id="themeBtn"
+              title="Ganti tema">
+
+        🌙
+
+      </button>
+
+
+      <button class="icon-btn"
+              id="soundBtn"
+              title="Suara">
+
+        🔇
+
+      </button>
+
+
+      <button class="icon-btn"
+              id="settingsBtn"
+              title="Settings">
+
+        ⚙
+
+      </button>
+
     </div>
+
   </header>
 
+
+
+  <!-- ==========================================
+       MAIN LAYOUT
+  =========================================== -->
+
   <main class="layout">
+
+
+    <!-- ========================================
+         ADVENTURE PANEL
+    ========================================= -->
+
     <aside class="adventure-panel panel">
+
+
       <div class="knight-wrap">
-        <div class="cube-knight" id="knight">
+
+        <div class="cube-knight"
+             id="knight">
+
           <div class="helmet">
-            <div class="visor"><i></i><i></i></div>
-            <div class="horn left"></div><div class="horn right"></div>
+
+            <div class="visor">
+
+              <i></i>
+
+              <i></i>
+
+            </div>
+
+            <div class="horn left"></div>
+
+            <div class="horn right"></div>
+
           </div>
+
+
           <div class="armor">
+
             <div class="core"></div>
-            <div class="shoulder left"></div><div class="shoulder right"></div>
+
+            <div class="shoulder left"></div>
+
+            <div class="shoulder right"></div>
+
           </div>
+
+
           <div class="sword"></div>
-          <div class="shield">◆</div>
+
+
+          <div class="shield">
+
+            ◆
+
+          </div>
+
         </div>
+
       </div>
 
-      <div class="knight-message" id="knightMessage">Calculation ready!</div>
+
+      <div class="knight-message"
+           id="knightMessage">
+
+        Calculation ready!
+
+      </div>
+
+
+      <!-- LEVEL -->
 
       <div class="level-card">
+
         <div class="level-head">
+
           <span>⚔ KNIGHT LEVEL</span>
-          <strong id="levelText">LEVEL 01</strong>
+
+          <strong id="levelText">
+            LEVEL 01
+          </strong>
+
         </div>
-        <div class="level-name" id="levelName">Novice Knight</div>
-        <div class="xp-bar"><span id="xpBar"></span></div>
-        <small id="xpText">0 / 100 XP</small>
+
+
+        <div class="level-name"
+             id="levelName">
+
+          Novice Knight
+
+        </div>
+
+
+        <div class="xp-bar">
+
+          <span id="xpBar"></span>
+
+        </div>
+
+
+        <small id="xpText">
+
+          0 / 100 XP
+
+        </small>
+
       </div>
+
+
+      <!-- STATS -->
 
       <div class="stats">
-        <div><span>CALCULATIONS</span><b id="calcCount">0</b></div>
-        <div><span>ACHIEVEMENTS</span><b id="achievementCount">0</b></div>
+
+        <div>
+
+          <span>CALCULATIONS</span>
+
+          <b id="calcCount">0</b>
+
+        </div>
+
+
+        <div>
+
+          <span>ACHIEVEMENTS</span>
+
+          <b id="achievementCount">0</b>
+
+        </div>
+
       </div>
 
-      <button class="wide-btn" id="historyBtn">⚔ ADVENTURE HISTORY</button>
-      <button class="wide-btn" id="achievementBtn">🏆 ACHIEVEMENTS</button>
+
+      <button class="wide-btn"
+              id="historyBtn">
+
+        ⚔ ADVENTURE HISTORY
+
+      </button>
+
+
+      <button class="wide-btn"
+              id="achievementBtn">
+
+        🏆 ACHIEVEMENTS
+
+      </button>
+
+
     </aside>
 
+
+
+    <!-- ========================================
+         CALCULATOR
+    ========================================= -->
+
     <section class="calculator panel">
-      <div class="display">
-        <div class="display-top" id="expression" aria-live="polite">0</div>
-        <div class="display-result" id="result" aria-live="polite">0</div>
-        <div class="memory-indicator" id="memoryIndicator"></div>
+
+
+      <!-- ======================================
+           MODE BUTTONS
+      ======================================= -->
+
+      <div class="calculator-modes">
+
+        <button class="mode-btn active"
+                data-mode="basic">
+
+          🧮
+
+          <span>Basic</span>
+
+        </button>
+
+
+        <button class="mode-btn"
+                data-mode="scientific">
+
+          🔬
+
+          <span>Scientific</span>
+
+        </button>
+
+
+        <button class="mode-btn"
+                data-mode="programmer">
+
+          💻
+
+          <span>Programmer</span>
+
+        </button>
+
+
+        <button class="mode-btn"
+                data-mode="converter">
+
+          🔄
+
+          <span>Converter</span>
+
+        </button>
+
       </div>
+
+
+
+      <!-- ======================================
+           DISPLAY
+      ======================================= -->
+
+      <div class="display">
+
+        <div class="display-top"
+             id="expression"
+             aria-live="polite">
+
+          0
+
+        </div>
+
+
+        <div class="display-result"
+             id="result"
+             aria-live="polite">
+
+          0
+
+        </div>
+
+
+        <div class="memory-indicator"
+             id="memoryIndicator">
+
+        </div>
+
+      </div>
+
+
+
+      <!-- ======================================
+           MEMORY
+      ======================================= -->
 
       <div class="memory-row">
-        <button data-action="mc">MC</button>
-        <button data-action="mr">MR</button>
-        <button data-action="mplus">M+</button>
-        <button data-action="mminus">M-</button>
-        <button data-action="ms">MS</button>
-        <button id="backspaceBtn">⌫</button>
+
+        <button data-action="mc">
+          MC
+        </button>
+
+        <button data-action="mr">
+          MR
+        </button>
+
+        <button data-action="mplus">
+          M+
+        </button>
+
+        <button data-action="mminus">
+          M-
+        </button>
+
+        <button data-action="ms">
+          MS
+        </button>
+
+        <button id="backspaceBtn">
+          ⌫
+        </button>
+
       </div>
 
-      <div class="scientific-panel hidden" id="scientificPanel">
-        <button data-scientific="sin">sin</button>
-        <button data-scientific="cos">cos</button>
-        <button data-scientific="tan">tan</button>
-        <button data-scientific="asin">asin</button>
-        <button data-scientific="acos">acos</button>
-        <button data-scientific="atan">atan</button>
-        <button data-scientific="sqrt">√</button>
-        <button data-scientific="square">x²</button>
-        <button data-scientific="power">xʸ</button>
-        <button data-scientific="inverse">1/x</button>
-        <button data-scientific="log">log</button>
-        <button data-scientific="ln">ln</button>
-        <button data-scientific="exp">eˣ</button>
-        <button data-scientific="tenpow">10ˣ</button>
-        <button data-constant="pi">π</button>
-        <button data-constant="e">e</button>
-        <button data-constant="phi">φ</button>
-        <button data-scientific="factorial">n!</button>
-        <button data-scientific="abs">abs</button>
-        <button data-scientific="random">rand</button>
+
+
+      <!-- ======================================
+           SCIENTIFIC PANEL
+      ======================================= -->
+
+      <div class="scientific-panel hidden"
+           id="scientificPanel">
+
+
+        <button data-scientific="sin">
+          sin
+        </button>
+
+
+        <button data-scientific="cos">
+          cos
+        </button>
+
+
+        <button data-scientific="tan">
+          tan
+        </button>
+
+
+        <button data-scientific="asin">
+          asin
+        </button>
+
+
+        <button data-scientific="acos">
+          acos
+        </button>
+
+
+        <button data-scientific="atan">
+          atan
+        </button>
+
+
+        <button data-scientific="sqrt">
+          √
+        </button>
+
+
+        <button data-scientific="square">
+          x²
+        </button>
+
+
+        <button data-scientific="power">
+          xʸ
+        </button>
+
+
+        <button data-scientific="inverse">
+          1/x
+        </button>
+
+
+        <button data-scientific="log">
+          log
+        </button>
+
+
+        <button data-scientific="ln">
+          ln
+        </button>
+
+
+        <button data-scientific="exp">
+          eˣ
+        </button>
+
+
+        <button data-scientific="tenpow">
+          10ˣ
+        </button>
+
+
+        <button data-constant="pi">
+          π
+        </button>
+
+
+        <button data-constant="e">
+          e
+        </button>
+
+
+        <button data-constant="phi">
+          φ
+        </button>
+
+
+        <button data-scientific="factorial">
+          n!
+        </button>
+
+
+        <button data-scientific="abs">
+          abs
+        </button>
+
+
+        <button data-scientific="random">
+          rand
+        </button>
+
+
       </div>
 
-      <div class="programmer-panel hidden" id="programmerPanel">
+
+
+      <!-- ======================================
+           PROGRAMMER PANEL
+      ======================================= -->
+
+      <div class="programmer-panel hidden"
+           id="programmerPanel">
+
+
         <div class="base-row">
-          <button data-base="2">BIN</button>
-          <button data-base="10" class="active">DEC</button>
-          <button data-base="16">HEX</button>
-          <button data-base="8">OCT</button>
+
+          <button data-base="2">
+            BIN
+          </button>
+
+
+          <button data-base="10"
+                  class="active">
+
+            DEC
+
+          </button>
+
+
+          <button data-base="16">
+            HEX
+          </button>
+
+
+          <button data-base="8">
+            OCT
+          </button>
+
         </div>
+
+
         <div class="bit-row">
-          <button data-bit="and">AND</button>
-          <button data-bit="or">OR</button>
-          <button data-bit="xor">XOR</button>
-          <button data-bit="not">NOT</button>
-          <button data-bit="shl">SHL</button>
-          <button data-bit="shr">SHR</button>
+
+          <button data-bit="and">
+            AND
+          </button>
+
+
+          <button data-bit="or">
+            OR
+          </button>
+
+
+          <button data-bit="xor">
+            XOR
+          </button>
+
+
+          <button data-bit="not">
+            NOT
+          </button>
+
+
+          <button data-bit="shl">
+            SHL
+          </button>
+
+
+          <button data-bit="shr">
+            SHR
+          </button>
+
         </div>
-        <div class="programmer-value" id="programmerValue">0</div>
+
+
+        <div class="programmer-value"
+             id="programmerValue">
+
+          0
+
+        </div>
+
+
       </div>
 
-      <div class="converter-panel hidden" id="converterPanel">
+
+
+      <!-- ======================================
+           CONVERTER PANEL
+      ======================================= -->
+
+      <div class="converter-panel hidden"
+           id="converterPanel">
+
+
         <div class="converter-controls">
+
+
           <select id="converterCategory">
-            <option value="length">Panjang</option>
-            <option value="weight">Berat</option>
-            <option value="temperature">Suhu</option>
-            <option value="area">Luas</option>
-            <option value="volume">Volume</option>
-            <option value="time">Waktu</option>
-            <option value="speed">Kecepatan</option>
-            <option value="data">Data Digital</option>
-            <option value="energy">Energi</option>
+
+            <option value="length">
+              Panjang
+            </option>
+
+            <option value="weight">
+              Berat
+            </option>
+
+            <option value="temperature">
+              Suhu
+            </option>
+
+            <option value="area">
+              Luas
+            </option>
+
+            <option value="volume">
+              Volume
+            </option>
+
+            <option value="time">
+              Waktu
+            </option>
+
+            <option value="speed">
+              Kecepatan
+            </option>
+
+            <option value="data">
+              Data Digital
+            </option>
+
+            <option value="energy">
+              Energi
+            </option>
+
           </select>
-          <input id="converterInput" type="number" value="1" aria-label="Nilai converter">
+
+
+          <input
+            id="converterInput"
+            type="number"
+            value="1"
+            aria-label="Nilai converter"
+          >
+
+
           <select id="converterFrom"></select>
+
+
           <span>→</span>
+
+
           <select id="converterTo"></select>
-          <output id="converterOutput">1</output>
+
+
+          <output id="converterOutput">
+
+            1
+
+          </output>
+
+
         </div>
+
+
       </div>
 
-      <div class="keypad" id="keypad">
-        <button class="danger" data-key="AC">AC</button>
-        <button data-key="percent">%</button>
-        <button data-key="sign">±</button>
-        <button class="operator" data-key="/">÷</button>
 
-        <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button>
-        <button class="operator" data-key="*">×</button>
 
-        <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button>
-        <button class="operator" data-key="-">−</button>
+      <!-- ======================================
+           KEYPAD
+      ======================================= -->
 
-        <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button>
-        <button class="operator" data-key="+">+</button>
+      <div class="keypad"
+           id="keypad">
 
-        <button class="zero" data-key="0">0</button><button data-key=".">.</button>
-        <button class="equal" data-key="=">=</button>
+
+        <button class="danger"
+                data-key="AC">
+
+          AC
+
+        </button>
+
+
+        <button data-key="percent">
+
+          %
+
+        </button>
+
+
+        <button data-key="sign">
+
+          ±
+
+        </button>
+
+
+        <button class="operator"
+                data-key="/">
+
+          ÷
+
+        </button>
+
+
+
+        <button data-key="7">
+
+          7
+
+        </button>
+
+
+        <button data-key="8">
+
+          8
+
+        </button>
+
+
+        <button data-key="9">
+
+          9
+
+        </button>
+
+
+        <button class="operator"
+                data-key="*">
+
+          ×
+
+        </button>
+
+
+
+        <button data-key="4">
+
+          4
+
+        </button>
+
+
+        <button data-key="5">
+
+          5
+
+        </button>
+
+
+        <button data-key="6">
+
+          6
+
+        </button>
+
+
+        <button class="operator"
+                data-key="-">
+
+          −
+
+        </button>
+
+
+
+        <button data-key="1">
+
+          1
+
+        </button>
+
+
+        <button data-key="2">
+
+          2
+
+        </button>
+
+
+        <button data-key="3">
+
+          3
+
+        </button>
+
+
+        <button class="operator"
+                data-key="+">
+
+          +
+
+        </button>
+
+
+
+        <button class="zero"
+                data-key="0">
+
+          0
+
+        </button>
+
+
+        <button data-key=".">
+
+          .
+
+        </button>
+
+
+        <button class="equal"
+                data-key="=">
+
+          =
+
+        </button>
+
+
       </div>
 
-      <div class="keyboard-ready">⌨ Keyboard Ready</div>
+
+
+      <div class="keyboard-ready">
+
+        ⌨ Keyboard Ready
+
+      </div>
+
+
     </section>
+
   </main>
 
+
+
+  <!-- ==========================================
+       FOOTER
+  =========================================== -->
+
   <footer class="footer">
-    <span>CUBES ADVENTURE KNIGHT</span>
-    <span>HTML • CSS • Vanilla JavaScript • LocalStorage</span>
+
+    <span>
+      CUBES ADVENTURE KNIGHT
+    </span>
+
+
+    <span>
+      HTML • CSS • Vanilla JavaScript • LocalStorage
+    </span>
+
   </footer>
 
-  <div class="toast-container" id="toastContainer"></div>
 
-  <div class="modal" id="historyModal">
+
+  <!-- ==========================================
+       TOAST
+  =========================================== -->
+
+  <div class="toast-container"
+       id="toastContainer">
+  </div>
+
+
+
+  <!-- ==========================================
+       HISTORY MODAL
+  =========================================== -->
+
+  <div class="modal"
+       id="historyModal">
+
+
     <div class="modal-box">
-      <button class="modal-close" data-close="historyModal">×</button>
-      <h2>⚔ Adventure History</h2>
+
+
+      <button class="modal-close"
+              data-close="historyModal">
+
+        ×
+
+      </button>
+
+
+      <h2>
+        ⚔ Adventure History
+      </h2>
+
+
       <div id="historyList"></div>
-      <button class="wide-btn danger-bg" id="clearHistory">CLEAR ALL HISTORY</button>
+
+
+      <button class="wide-btn danger-bg"
+              id="clearHistory">
+
+        CLEAR ALL HISTORY
+
+      </button>
+
+
     </div>
+
   </div>
 
-  <div class="modal" id="achievementModal">
+
+
+  <!-- ==========================================
+       ACHIEVEMENT MODAL
+  ========================================== -->
+
+  <div class="modal"
+       id="achievementModal">
+
+
     <div class="modal-box">
-      <button class="modal-close" data-close="achievementModal">×</button>
-      <h2>🏆 Achievements</h2>
+
+
+      <button class="modal-close"
+              data-close="achievementModal">
+
+        ×
+
+      </button>
+
+
+      <h2>
+        🏆 Achievements
+      </h2>
+
+
       <div id="achievementList"></div>
+
+
     </div>
+
   </div>
 
-  <div class="modal" id="settingsModal">
+
+
+  <!-- ==========================================
+       SETTINGS MODAL
+  ========================================== -->
+
+  <div class="modal"
+       id="settingsModal">
+
+
     <div class="modal-box settings-box">
-      <button class="modal-close" data-close="settingsModal">×</button>
-      <h2>⚙ SETTINGS</h2>
-      <label>Theme <button class="setting-toggle" id="themeSetting">Dark</button></label>
-      <label>Sound <button class="setting-toggle" id="soundSetting">OFF</button></label>
-      <label>Animation <button class="setting-toggle" id="animationSetting">ON</button></label>
-      <label>Vibration <button class="setting-toggle" id="vibrationSetting">OFF</button></label>
-      <label>Decimal Places
-        <select id="decimalSetting">
-          <option value="auto">Auto</option><option value="2">2</option><option value="4">4</option>
-          <option value="6">6</option><option value="8">8</option>
-        </select>
+
+
+      <button class="modal-close"
+              data-close="settingsModal">
+
+        ×
+
+      </button>
+
+
+      <h2>
+        ⚙ SETTINGS
+      </h2>
+
+
+      <label>
+
+        Theme
+
+        <button class="setting-toggle"
+                id="themeSetting">
+
+          Dark
+
+        </button>
+
       </label>
-      <button class="wide-btn danger-bg" id="resetData">RESET ALL DATA</button>
+
+
+      <label>
+
+        Sound
+
+        <button class="setting-toggle"
+                id="soundSetting">
+
+          OFF
+
+        </button>
+
+      </label>
+
+
+      <label>
+
+        Animation
+
+        <button class="setting-toggle"
+                id="animationSetting">
+
+          ON
+
+        </button>
+
+      </label>
+
+
+      <label>
+
+        Vibration
+
+        <button class="setting-toggle"
+                id="vibrationSetting">
+
+          OFF
+
+        </button>
+
+      </label>
+
+
+      <label>
+
+        Decimal Places
+
+        <select id="decimalSetting">
+
+          <option value="auto">
+            Auto
+          </option>
+
+          <option value="2">
+            2
+          </option>
+
+          <option value="4">
+            4
+          </option>
+
+          <option value="6">
+            6
+          </option>
+
+          <option value="8">
+            8
+          </option>
+
+        </select>
+
+      </label>
+
+
+      <button class="wide-btn danger-bg"
+              id="resetData">
+
+        RESET ALL DATA
+
+      </button>
+
+
     </div>
+
   </div>
+
+
+
+  <!-- ==========================================
+       SCRIPT
+  ========================================== -->
 
   <script src="script.js"></script>
+
+
+  <!-- ==========================================
+       MODE BUTTON SCRIPT
+  ========================================== -->
+
+  <script>
+
+    const modeButtons =
+      document.querySelectorAll(".mode-btn");
+
+    const calculatorModeSelect =
+      document.getElementById("modeSelect");
+
+
+    modeButtons.forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        const mode =
+          button.dataset.mode;
+
+
+        /* ==============================
+           UBAH SELECT
+        ============================== */
+
+        calculatorModeSelect.value =
+          mode;
+
+
+        /* ==============================
+           JALANKAN MODE
+        ============================== */
+
+        changeMode(mode);
+
+
+        /* ==============================
+           TOMBOL AKTIF
+        ============================== */
+
+        modeButtons.forEach(btn => {
+
+          btn.classList.remove("active");
+
+        });
+
+
+        button.classList.add("active");
+
+
+      });
+
+    });
+
+
+    /* =====================================
+       SYNC DENGAN SELECT
+    ===================================== */
+
+    calculatorModeSelect.addEventListener(
+      "change",
+      () => {
+
+        const mode =
+          calculatorModeSelect.value;
+
+
+        changeMode(mode);
+
+
+        modeButtons.forEach(button => {
+
+          button.classList.toggle(
+            "active",
+            button.dataset.mode === mode
+          );
+
+        });
+
+      }
+    );
+
+
+  </script>
+
+
 </body>
+
 </html>
