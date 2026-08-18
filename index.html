@@ -15,35 +15,245 @@
 
   <link rel="stylesheet" href="style.css">
 
+  <!-- =====================================================
+       TAMBAHAN STYLE UNTUK TOMBOL MODE
+  ====================================================== -->
+  <style>
+
+    /* 4 tombol mode */
+    .calculator-modes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .calculator-modes .mode-btn {
+      appearance: none;
+      -webkit-appearance: none;
+
+      background: #050812 !important;
+      background-image: none !important;
+
+      color: #eef7ff !important;
+
+      border: 1px solid #26364f !important;
+      border-radius: 7px;
+
+      padding: 9px 5px;
+
+      font-size: 11px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: all .15s ease;
+
+      box-shadow:
+        inset 0 1px rgba(255,255,255,.04),
+        0 3px 10px rgba(0,0,0,.25);
+    }
+
+    .calculator-modes .mode-btn:hover {
+      background: #0b1220 !important;
+      color: #35e7ff !important;
+
+      border-color: #35e7ff !important;
+
+      box-shadow:
+        0 0 14px rgba(53,231,255,.25);
+    }
+
+    .calculator-modes .mode-btn.active {
+      background: #050812 !important;
+      color: #35e7ff !important;
+
+      border-color: #35e7ff !important;
+
+      box-shadow:
+        0 0 14px rgba(53,231,255,.25),
+        inset 0 0 10px rgba(53,231,255,.05);
+    }
+
+    .calculator-modes .mode-btn:focus {
+      outline: none;
+
+      background: #050812 !important;
+      color: #35e7ff !important;
+
+      border-color: #35e7ff !important;
+    }
+
+
+    /* =====================================================
+       PROGRAMMER MODE
+    ====================================================== */
+
+    .programmer-panel {
+      margin: 10px 0;
+      padding: 12px;
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      background: rgba(53,231,255,.025);
+    }
+
+    .programmer-title {
+      color: #8ca0bd;
+
+      font-size: 10px;
+      font-weight: 800;
+
+      letter-spacing: 1.5px;
+
+      margin: 8px 0;
+    }
+
+    .base-row {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 6px;
+
+      margin-bottom: 8px;
+    }
+
+    .bit-row {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 6px;
+    }
+
+    .base-row button,
+    .bit-row button {
+
+      min-height: 38px;
+
+      padding: 8px 4px;
+
+      background: #050812 !important;
+
+      color: #eef7ff !important;
+
+      border: 1px solid #26364f !important;
+
+      border-radius: 7px;
+
+      font-size: 10px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: all .15s ease;
+    }
+
+    .base-row button:hover,
+    .bit-row button:hover {
+
+      background: #0b1220 !important;
+
+      color: #35e7ff !important;
+
+      border-color: #35e7ff !important;
+
+      box-shadow:
+        0 0 12px rgba(53,231,255,.2);
+    }
+
+    .base-row button.active {
+
+      background: #050812 !important;
+
+      color: #35e7ff !important;
+
+      border-color: #35e7ff !important;
+
+      box-shadow:
+        0 0 12px rgba(53,231,255,.25);
+    }
+
+    .programmer-value {
+
+      margin-top: 10px;
+
+      padding: 10px;
+
+      background: #030711;
+
+      border: 1px solid var(--border);
+
+      border-radius: 9px;
+
+      color: #35e7ff;
+
+      font-family: monospace;
+
+      line-height: 1.7;
+
+      overflow-x: auto;
+    }
+
+    @media(max-width:560px) {
+
+      .calculator-modes {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .base-row {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .bit-row {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+    }
+
+  </style>
+
 </head>
 
 
 <body>
 
-  <!-- ==========================================
+
+  <!-- =====================================================
        BACKGROUND
-  =========================================== -->
+  ====================================================== -->
 
   <div class="bg-grid"></div>
 
-  <div class="particles" id="particles"></div>
+  <div class="particles"
+       id="particles"></div>
 
 
-  <!-- ==========================================
+  <!-- =====================================================
        TOP BAR
-  =========================================== -->
+  ====================================================== -->
 
   <header class="topbar">
 
     <div class="brand">
 
-      <div class="brand-cube">◆</div>
+      <div class="brand-cube">
+        ◆
+      </div>
 
       <div>
 
-        <h1>CUBES ADVENTURE KNIGHT</h1>
+        <h1>
+          CUBES ADVENTURE KNIGHT
+        </h1>
 
-        <span>FUTURISTIC CALCULATOR</span>
+        <span>
+          FUTURISTIC CALCULATOR
+        </span>
 
       </div>
 
@@ -52,22 +262,27 @@
 
     <div class="top-actions">
 
-      <!--
-        SELECT ASLI TETAP DIPERTAHANKAN
-        AGAR SCRIPT.JS TETAP BERFUNGSI
-      -->
+      <!-- SELECT ASLI UNTUK SCRIPT -->
 
       <select id="modeSelect"
               aria-label="Calculator mode"
               style="display:none;">
 
-        <option value="basic">BASIC</option>
+        <option value="basic">
+          BASIC
+        </option>
 
-        <option value="scientific">SCIENTIFIC</option>
+        <option value="scientific">
+          SCIENTIFIC
+        </option>
 
-        <option value="programmer">PROGRAMMER</option>
+        <option value="programmer">
+          PROGRAMMER
+        </option>
 
-        <option value="converter">CONVERTER</option>
+        <option value="converter">
+          CONVERTER
+        </option>
 
       </select>
 
@@ -104,16 +319,16 @@
 
 
 
-  <!-- ==========================================
-       MAIN LAYOUT
-  =========================================== -->
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
 
   <main class="layout">
 
 
-    <!-- ========================================
+    <!-- ===================================================
          ADVENTURE PANEL
-    ========================================= -->
+    ==================================================== -->
 
     <aside class="adventure-panel panel">
 
@@ -123,18 +338,17 @@
         <div class="cube-knight"
              id="knight">
 
+
           <div class="helmet">
 
             <div class="visor">
 
               <i></i>
-
               <i></i>
 
             </div>
 
             <div class="horn left"></div>
-
             <div class="horn right"></div>
 
           </div>
@@ -145,7 +359,6 @@
             <div class="core"></div>
 
             <div class="shoulder left"></div>
-
             <div class="shoulder right"></div>
 
           </div>
@@ -155,10 +368,9 @@
 
 
           <div class="shield">
-
             ◆
-
           </div>
+
 
         </div>
 
@@ -179,7 +391,9 @@
 
         <div class="level-head">
 
-          <span>⚔ KNIGHT LEVEL</span>
+          <span>
+            ⚔ KNIGHT LEVEL
+          </span>
 
           <strong id="levelText">
             LEVEL 01
@@ -204,9 +418,7 @@
 
 
         <small id="xpText">
-
           0 / 100 XP
-
         </small>
 
       </div>
@@ -218,18 +430,26 @@
 
         <div>
 
-          <span>CALCULATIONS</span>
+          <span>
+            CALCULATIONS
+          </span>
 
-          <b id="calcCount">0</b>
+          <b id="calcCount">
+            0
+          </b>
 
         </div>
 
 
         <div>
 
-          <span>ACHIEVEMENTS</span>
+          <span>
+            ACHIEVEMENTS
+          </span>
 
-          <b id="achievementCount">0</b>
+          <b id="achievementCount">
+            0
+          </b>
 
         </div>
 
@@ -256,25 +476,28 @@
 
 
 
-    <!-- ========================================
+    <!-- ===================================================
          CALCULATOR
-    ========================================= -->
+    ==================================================== -->
 
     <section class="calculator panel">
 
 
-      <!-- ======================================
+      <!-- =================================================
            MODE BUTTONS
-      ======================================= -->
+      ================================================== -->
 
       <div class="calculator-modes">
+
 
         <button class="mode-btn active"
                 data-mode="basic">
 
           🧮
 
-          <span>Basic</span>
+          <span>
+            Basic
+          </span>
 
         </button>
 
@@ -284,7 +507,9 @@
 
           🔬
 
-          <span>Scientific</span>
+          <span>
+            Scientific
+          </span>
 
         </button>
 
@@ -294,7 +519,9 @@
 
           💻
 
-          <span>Programmer</span>
+          <span>
+            Programmer
+          </span>
 
         </button>
 
@@ -304,19 +531,23 @@
 
           🔄
 
-          <span>Converter</span>
+          <span>
+            Converter
+          </span>
 
         </button>
+
 
       </div>
 
 
 
-      <!-- ======================================
+      <!-- =================================================
            DISPLAY
-      ======================================= -->
+      ================================================== -->
 
       <div class="display">
+
 
         <div class="display-top"
              id="expression"
@@ -341,47 +572,55 @@
 
         </div>
 
+
       </div>
 
 
 
-      <!-- ======================================
+      <!-- =================================================
            MEMORY
-      ======================================= -->
+      ================================================== -->
 
       <div class="memory-row">
+
 
         <button data-action="mc">
           MC
         </button>
 
+
         <button data-action="mr">
           MR
         </button>
+
 
         <button data-action="mplus">
           M+
         </button>
 
+
         <button data-action="mminus">
           M-
         </button>
+
 
         <button data-action="ms">
           MS
         </button>
 
+
         <button id="backspaceBtn">
           ⌫
         </button>
+
 
       </div>
 
 
 
-      <!-- ======================================
+      <!-- =================================================
            SCIENTIFIC PANEL
-      ======================================= -->
+      ================================================== -->
 
       <div class="scientific-panel hidden"
            id="scientificPanel">
@@ -491,74 +730,117 @@
 
 
 
-      <!-- ======================================
+      <!-- =================================================
            PROGRAMMER PANEL
-      ======================================= -->
+      ================================================== -->
 
       <div class="programmer-panel hidden"
            id="programmerPanel">
 
 
+        <!-- SISTEM BILANGAN -->
+
+        <div class="programmer-title">
+
+          SISTEM BILANGAN
+
+        </div>
+
+
         <div class="base-row">
 
+
           <button data-base="2">
-            BIN
+
+            Binary
+
           </button>
 
 
           <button data-base="10"
                   class="active">
 
-            DEC
+            Decimal
 
           </button>
 
 
           <button data-base="16">
-            HEX
+
+            Hexadecimal
+
           </button>
 
 
           <button data-base="8">
-            OCT
+
+            Octal
+
           </button>
+
+
+        </div>
+
+
+
+        <!-- OPERASI BITWISE -->
+
+        <div class="programmer-title">
+
+          OPERASI BITWISE
 
         </div>
 
 
         <div class="bit-row">
 
+
           <button data-bit="and">
+
             AND
+
           </button>
 
 
           <button data-bit="or">
+
             OR
+
           </button>
 
 
           <button data-bit="xor">
+
             XOR
+
           </button>
 
 
           <button data-bit="not">
+
             NOT
+
           </button>
 
 
           <button data-bit="shl">
-            SHL
+
+            Shift Left
+
           </button>
 
 
           <button data-bit="shr">
-            SHR
+
+            Shift Right
+
           </button>
+
 
         </div>
 
+
+        <!-- NILAI PROGRAMMER -->
 
         <div class="programmer-value"
              id="programmerValue">
@@ -572,9 +854,9 @@
 
 
 
-      <!-- ======================================
+      <!-- =================================================
            CONVERTER PANEL
-      ======================================= -->
+      ================================================== -->
 
       <div class="converter-panel hidden"
            id="converterPanel">
@@ -585,41 +867,51 @@
 
           <select id="converterCategory">
 
+
             <option value="length">
               Panjang
             </option>
+
 
             <option value="weight">
               Berat
             </option>
 
+
             <option value="temperature">
               Suhu
             </option>
+
 
             <option value="area">
               Luas
             </option>
 
+
             <option value="volume">
               Volume
             </option>
+
 
             <option value="time">
               Waktu
             </option>
 
+
             <option value="speed">
               Kecepatan
             </option>
+
 
             <option value="data">
               Data Digital
             </option>
 
+
             <option value="energy">
               Energi
             </option>
+
 
           </select>
 
@@ -635,7 +927,9 @@
           <select id="converterFrom"></select>
 
 
-          <span>→</span>
+          <span>
+            →
+          </span>
 
 
           <select id="converterTo"></select>
@@ -655,9 +949,9 @@
 
 
 
-      <!-- ======================================
+      <!-- =================================================
            KEYPAD
-      ======================================= -->
+      ================================================== -->
 
       <div class="keypad"
            id="keypad">
@@ -695,23 +989,17 @@
 
 
         <button data-key="7">
-
           7
-
         </button>
 
 
         <button data-key="8">
-
           8
-
         </button>
 
 
         <button data-key="9">
-
           9
-
         </button>
 
 
@@ -725,23 +1013,17 @@
 
 
         <button data-key="4">
-
           4
-
         </button>
 
 
         <button data-key="5">
-
           5
-
         </button>
 
 
         <button data-key="6">
-
           6
-
         </button>
 
 
@@ -755,23 +1037,17 @@
 
 
         <button data-key="1">
-
           1
-
         </button>
 
 
         <button data-key="2">
-
           2
-
         </button>
 
 
         <button data-key="3">
-
           3
-
         </button>
 
 
@@ -810,7 +1086,6 @@
       </div>
 
 
-
       <div class="keyboard-ready">
 
         ⌨ Keyboard Ready
@@ -820,42 +1095,50 @@
 
     </section>
 
+
   </main>
 
 
 
-  <!-- ==========================================
+  <!-- =====================================================
        FOOTER
-  =========================================== -->
+  ====================================================== -->
 
   <footer class="footer">
 
+
     <span>
+
       CUBES ADVENTURE KNIGHT
+
     </span>
 
 
     <span>
+
       HTML • CSS • Vanilla JavaScript • LocalStorage
+
     </span>
+
 
   </footer>
 
 
 
-  <!-- ==========================================
+  <!-- =====================================================
        TOAST
-  =========================================== -->
+  ====================================================== -->
 
   <div class="toast-container"
        id="toastContainer">
+
   </div>
 
 
 
-  <!-- ==========================================
+  <!-- =====================================================
        HISTORY MODAL
-  =========================================== -->
+  ====================================================== -->
 
   <div class="modal"
        id="historyModal">
@@ -873,7 +1156,9 @@
 
 
       <h2>
+
         ⚔ Adventure History
+
       </h2>
 
 
@@ -894,9 +1179,9 @@
 
 
 
-  <!-- ==========================================
+  <!-- =====================================================
        ACHIEVEMENT MODAL
-  ========================================== -->
+  ====================================================== -->
 
   <div class="modal"
        id="achievementModal">
@@ -914,7 +1199,9 @@
 
 
       <h2>
+
         🏆 Achievements
+
       </h2>
 
 
@@ -927,9 +1214,9 @@
 
 
 
-  <!-- ==========================================
+  <!-- =====================================================
        SETTINGS MODAL
-  ========================================== -->
+  ====================================================== -->
 
   <div class="modal"
        id="settingsModal">
@@ -947,7 +1234,9 @@
 
 
       <h2>
+
         ⚙ SETTINGS
+
       </h2>
 
 
@@ -1052,16 +1341,17 @@
 
 
 
-  <!-- ==========================================
-       SCRIPT
-  ========================================== -->
+  <!-- =====================================================
+       SCRIPT UTAMA
+  ====================================================== -->
 
   <script src="script.js"></script>
 
 
-  <!-- ==========================================
+
+  <!-- =====================================================
        MODE BUTTON SCRIPT
-  ========================================== -->
+  ====================================================== -->
 
   <script>
 
@@ -1080,24 +1370,22 @@
           button.dataset.mode;
 
 
-        /* ==============================
-           UBAH SELECT
-        ============================== */
+        /* UBAH SELECT */
 
         calculatorModeSelect.value =
           mode;
 
 
-        /* ==============================
-           JALANKAN MODE
-        ============================== */
+        /* JALANKAN MODE */
 
-        changeMode(mode);
+        if (typeof changeMode === "function") {
+
+          changeMode(mode);
+
+        }
 
 
-        /* ==============================
-           TOMBOL AKTIF
-        ============================== */
+        /* TOMBOL AKTIF */
 
         modeButtons.forEach(btn => {
 
@@ -1108,15 +1396,15 @@
 
         button.classList.add("active");
 
-
       });
 
     });
 
 
-    /* =====================================
+
+    /* ===================================================
        SYNC DENGAN SELECT
-    ===================================== */
+    ==================================================== */
 
     calculatorModeSelect.addEventListener(
       "change",
@@ -1126,7 +1414,11 @@
           calculatorModeSelect.value;
 
 
-        changeMode(mode);
+        if (typeof changeMode === "function") {
+
+          changeMode(mode);
+
+        }
 
 
         modeButtons.forEach(button => {
@@ -1140,7 +1432,6 @@
 
       }
     );
-
 
   </script>
 
