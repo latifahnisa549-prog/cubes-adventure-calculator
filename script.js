@@ -1,188 +1,679 @@
 (() => {
     "use strict";
 
+    // ==========================================
+    // STATE
+    // ==========================================
+
+    let currentInput = "0";
     let expression = "";
-    let currentValue = "0";
     let memory = 0;
     let history = [];
+    let justCalculated = false;
+
+    // ==========================================
+    // ELEMENT
+    // ==========================================
 
     const display = document.getElementById("result");
-    const expressionDisplay = document.getElementById("expression");
+    const expressionDisplay =
+        document.getElementById("expression");
+
+    // ==========================================
+    // DISPLAY
+    // ==========================================
 
     function updateDisplay() {
         if (display) {
-            display.textContent = currentValue;
+            display.textContent = currentInput;
         }
 
         if (expressionDisplay) {
-            expressionDisplay.textContent = expression || "0";
+            expressionDisplay.textContent =
+                expression || "0";
         }
     }
 
+    // ==========================================
+    // FORMAT ANGKA
+    // ==========================================
+
+    function formatNumber(number) {
+
+        if (!Number.isFinite(number)) {
+            return "ERROR";
+        }
+
+        const rounded =
+            Number(number.toFixed(10));
+
+        return String(rounded);
+    }
+
+    // ==========================================
+    // NORMALISASI OPERATOR
+    // ==========================================
+
+    function normalizeOperator(operator) {
+
+        if (
+            operator === "×" ||
+            operator === "x" ||
+            operator === "X"
+        ) {
+            return "*";
+        }
+
+        if (
+            operator === "÷" ||
+            operator === ":"
+        ) {
+            return "/";
+        }
+
+        if (
+            operator === "−" ||
+            operator === "–"
+        ) {
+            return "-";
+        }
+
+        return operator;
+    }
+
+    // ==========================================
+    // INPUT ANGKA
+    // ==========================================
+
     function inputNumber(value) {
-        if (currentValue === "ERROR") {
-            currentValue = "0";
+
+        if (
+            currentInput === "ERROR" ||
+            justCalculated
+        ) {
+            currentInput = "0";
             expression = "";
+            justCalculated = false;
         }
 
-        if (currentValue === "0" && value !== ".") {
-            currentValue = value;
-        } else {
-            if (value === "." && currentValue.includes(".")) {
-                return;
+        // Angka 0 di awal
+        if (
+            currentInput === "0" &&
+            value !== "."
+        ) {
+            currentInput = value;
+        }
+
+        // Titik desimal
+        else if (
+            value === "." &&
+            currentInput.includes(".")
+        ) {
+            return;
+        }
+
+        else {
+            currentInput += value;
+        }
+
+        // Jika sedang memasukkan angka setelah operator
+        if (expression) {
+
+            const lastChar =
+                expression.slice(-1);
+
+            if (
+                "+-*/".includes(lastChar)
+            ) {
+                expression += currentInput;
             }
-
-            currentValue += value;
+            else {
+                expression =
+                    expression.replace(
+                        /(-?\d*\.?\d+)$/,
+                        currentInput
+                    );
+            }
+        }
+        else {
+            expression = currentInput;
         }
 
-        expression = currentValue;
         updateDisplay();
     }
 
+    // ==========================================
+    // OPERATOR
+    // ==========================================
+
     function inputOperator(operator) {
-        if (currentValue === "ERROR") {
+
+        operator =
+            normalizeOperator(operator);
+
+        if (
+            !["+","-","*","/"].includes(operator)
+        ) {
+            return;
+        }
+
+        if (currentInput === "ERROR") {
             clearCalculator();
         }
 
-        if (expression === "") {
-            expression = currentValue;
+        justCalculated = false;
+
+        // Kalau belum ada expression
+        if (!expression) {
+            expression = currentInput;
         }
 
-        // Jangan izinkan operator dobel
-        if (/[+\-*/]$/.test(expression)) {
-            expression = expression.slice(0, -1);
+        // Kalau expression diakhiri operator,
+        // ganti operator lama
+        if (
+            /[+\-*/]$/.test(expression)
+        ) {
+            expression =
+                expression.slice(0, -1) +
+                operator;
         }
 
-        expression += operator;
-        currentValue = "0";
+        else {
+
+            // Pastikan angka terakhir masuk
+            if (
+                !expression.endsWith(
+                    currentInput
+                )
+            ) {
+                expression += currentInput;
+            }
+
+            expression += operator;
+        }
+
+        currentInput = "0";
 
         updateDisplay();
     }
 
+    // ==========================================
+    // TOKENIZER
+    // ==========================================
+
+    function tokenize(input) {
+
+        const tokens = [];
+
+        let i = 0;
+
+        while (i < input.length) {
+
+            const char = input[i];
+
+            // Spasi
+            if (/\s/.test(char)) {
+                i++;
+                continue;
+            }
+
+            // Angka
+            if (
+                /[0-9.]/.test(char)
+            ) {
+
+                let number = "";
+
+                while (
+                    i < input.length &&
+                    /[0-9.]/.test(input[i])
+                ) {
+                    number += input[i];
+                    i++;
+                }
+
+                if (
+                    (number.match(/\./g) || [])
+                        .length > 1
+                ) {
+                    throw new Error(
+                        "Invalid number"
+                    );
+                }
+
+                tokens.push({
+                    type: "number",
+                    value: Number(number)
+                });
+
+                continue;
+            }
+
+            // Operator
+            if (
+                "+-*/".includes(char)
+            ) {
+
+                tokens.push({
+                    type: "operator",
+                    value: char
+                });
+
+                i++;
+                continue;
+            }
+
+            // Kurung
+            if (char === "(") {
+
+                tokens.push({
+                    type: "left"
+                });
+
+                i++;
+                continue;
+            }
+
+            if (char === ")") {
+
+                tokens.push({
+                    type: "right"
+                });
+
+                i++;
+                continue;
+            }
+
+            throw new Error(
+                "Invalid character"
+            );
+        }
+
+        return tokens;
+    }
+
+    // ==========================================
+    // PARSER
+    // Mendukung:
+    // 7+8
+    // 5+3*2
+    // (5+3)*2
+    // -5+10
+    // ==========================================
+
+    function evaluateExpression(input) {
+
+        const tokens =
+            tokenize(input);
+
+        let position = 0;
+
+        function parseExpression() {
+
+            let value =
+                parseTerm();
+
+            while (
+                position < tokens.length &&
+                tokens[position].type ===
+                    "operator" &&
+                (
+                    tokens[position].value === "+" ||
+                    tokens[position].value === "-"
+                )
+            ) {
+
+                const operator =
+                    tokens[position].value;
+
+                position++;
+
+                const right =
+                    parseTerm();
+
+                if (operator === "+") {
+                    value += right;
+                }
+                else {
+                    value -= right;
+                }
+            }
+
+            return value;
+        }
+
+        function parseTerm() {
+
+            let value =
+                parseFactor();
+
+            while (
+                position < tokens.length &&
+                tokens[position].type ===
+                    "operator" &&
+                (
+                    tokens[position].value === "*" ||
+                    tokens[position].value === "/"
+                )
+            ) {
+
+                const operator =
+                    tokens[position].value;
+
+                position++;
+
+                const right =
+                    parseFactor();
+
+                if (
+                    operator === "/" &&
+                    right === 0
+                ) {
+                    throw new Error(
+                        "Division by zero"
+                    );
+                }
+
+                if (operator === "*") {
+                    value *= right;
+                }
+                else {
+                    value /= right;
+                }
+            }
+
+            return value;
+        }
+
+        function parseFactor() {
+
+            if (
+                position >= tokens.length
+            ) {
+                throw new Error(
+                    "Invalid expression"
+                );
+            }
+
+            const token =
+                tokens[position];
+
+            // Unary minus
+            if (
+                token.type === "operator" &&
+                token.value === "-"
+            ) {
+
+                position++;
+
+                return -parseFactor();
+            }
+
+            // Unary plus
+            if (
+                token.type === "operator" &&
+                token.value === "+"
+            ) {
+
+                position++;
+
+                return parseFactor();
+            }
+
+            // Angka
+            if (
+                token.type === "number"
+            ) {
+
+                position++;
+
+                return token.value;
+            }
+
+            // Kurung
+            if (
+                token.type === "left"
+            ) {
+
+                position++;
+
+                const value =
+                    parseExpression();
+
+                if (
+                    position >=
+                    tokens.length ||
+                    tokens[position].type !==
+                        "right"
+                ) {
+                    throw new Error(
+                        "Missing bracket"
+                    );
+                }
+
+                position++;
+
+                return value;
+            }
+
+            throw new Error(
+                "Invalid expression"
+            );
+        }
+
+        const result =
+            parseExpression();
+
+        if (
+            position !== tokens.length
+        ) {
+            throw new Error(
+                "Invalid expression"
+            );
+        }
+
+        if (!Number.isFinite(result)) {
+            throw new Error(
+                "Invalid result"
+            );
+        }
+
+        return result;
+    }
+
+    // ==========================================
+    // CALCULATE
+    // ==========================================
+
     function calculate() {
+
         if (!expression) {
             return;
         }
 
-        let finalExpression = expression;
+        let finalExpression =
+            expression;
 
-        // Kalau terakhir operator, hapus operatornya
-        if (/[+\-*/]$/.test(finalExpression)) {
-            finalExpression = finalExpression.slice(0, -1);
+        // Hapus operator terakhir
+        finalExpression =
+            finalExpression.replace(
+                /[+\-*/]+$/,
+                ""
+            );
+
+        if (!finalExpression) {
+            return;
         }
 
         try {
-            // Hanya izinkan karakter kalkulator
-            if (!/^[0-9+\-*/().\s]+$/.test(finalExpression)) {
-                throw new Error("Invalid");
-            }
 
-            const result = Function(
-                '"use strict"; return (' + finalExpression + ')'
-            )();
+            const result =
+                evaluateExpression(
+                    finalExpression
+                );
 
-            if (!Number.isFinite(result)) {
-                throw new Error("Invalid");
-            }
+            const formatted =
+                formatNumber(result);
 
             history.unshift({
-                expression: finalExpression,
-                result: result
+                expression:
+                    finalExpression,
+                result: formatted,
+                time:
+                    new Date().toLocaleString(
+                        "id-ID"
+                    )
             });
 
             if (history.length > 50) {
                 history.pop();
             }
 
-            currentValue = formatNumber(result);
-            expression = finalExpression + " =";
+            currentInput =
+                formatted;
 
-            updateDisplay();
+            expression =
+                finalExpression + " =";
+
+            justCalculated = true;
+
             saveHistory();
+            updateDisplay();
 
-        } catch (error) {
-            currentValue = "ERROR";
-            expression = "Invalid calculation";
+        }
+        catch (error) {
+
+            currentInput = "ERROR";
+
+            expression =
+                "Invalid calculation";
+
+            justCalculated = true;
+
             updateDisplay();
         }
     }
 
-    function formatNumber(number) {
-        if (!Number.isFinite(number)) {
-            return "ERROR";
-        }
-
-        // Membatasi angka desimal panjang
-        const rounded = Number(number.toFixed(10));
-
-        return String(rounded);
-    }
+    // ==========================================
+    // CLEAR
+    // ==========================================
 
     function clearCalculator() {
+
+        currentInput = "0";
         expression = "";
-        currentValue = "0";
+        justCalculated = false;
+
         updateDisplay();
     }
 
+    // ==========================================
+    // BACKSPACE
+    // ==========================================
+
     function backspace() {
-        if (currentValue === "ERROR") {
+
+        if (
+            currentInput === "ERROR" ||
+            justCalculated
+        ) {
             clearCalculator();
             return;
         }
 
-        if (currentValue.length <= 1) {
-            currentValue = "0";
-        } else {
-            currentValue = currentValue.slice(0, -1);
+        if (
+            currentInput.length <= 1
+        ) {
+            currentInput = "0";
+        }
+        else {
+            currentInput =
+                currentInput.slice(0, -1);
         }
 
-        expression = currentValue;
+        // Update angka terakhir pada expression
+        expression =
+            expression.replace(
+                /(\d*\.?\d+)$/,
+                currentInput
+            );
 
         updateDisplay();
     }
+
+    // ==========================================
+    // PERCENT
+    // ==========================================
 
     function percentage() {
-        const number = Number(currentValue);
+
+        const number =
+            Number(currentInput);
 
         if (!Number.isFinite(number)) {
             return;
         }
 
-        currentValue = String(number / 100);
-        expression = currentValue;
+        currentInput =
+            formatNumber(
+                number / 100
+            );
+
+        expression =
+            currentInput;
 
         updateDisplay();
     }
+
+    // ==========================================
+    // PLUS MINUS
+    // ==========================================
 
     function changeSign() {
-        const number = Number(currentValue);
+
+        const number =
+            Number(currentInput);
 
         if (!Number.isFinite(number)) {
             return;
         }
 
-        currentValue = String(number * -1);
-        expression = currentValue;
+        currentInput =
+            formatNumber(
+                number * -1
+            );
+
+        expression =
+            currentInput;
 
         updateDisplay();
     }
 
-    // =========================
+    // ==========================================
     // MEMORY
-    // =========================
+    // ==========================================
 
     function memoryClear() {
         memory = 0;
     }
 
     function memoryRecall() {
-        currentValue = String(memory);
-        expression = currentValue;
+
+        currentInput =
+            formatNumber(memory);
+
+        expression =
+            currentInput;
+
+        justCalculated = false;
+
         updateDisplay();
     }
 
     function memoryAdd() {
-        const number = Number(currentValue);
+
+        const number =
+            Number(currentInput);
 
         if (Number.isFinite(number)) {
             memory += number;
@@ -190,7 +681,9 @@
     }
 
     function memorySubtract() {
-        const number = Number(currentValue);
+
+        const number =
+            Number(currentInput);
 
         if (Number.isFinite(number)) {
             memory -= number;
@@ -198,330 +691,480 @@
     }
 
     function memoryStore() {
-        const number = Number(currentValue);
+
+        const number =
+            Number(currentInput);
 
         if (Number.isFinite(number)) {
             memory = number;
         }
     }
 
-    // =========================
+    // ==========================================
     // SCIENTIFIC
-    // =========================
+    // ==========================================
 
     function scientific(type) {
-        const number = Number(currentValue);
+
+        const number =
+            Number(currentInput);
 
         if (!Number.isFinite(number)) {
-            currentValue = "ERROR";
-            updateDisplay();
             return;
         }
 
         let result;
 
-        switch (type) {
+        try {
 
-            case "sin":
-                result = Math.sin(number * Math.PI / 180);
-                break;
+            switch (type) {
 
-            case "cos":
-                result = Math.cos(number * Math.PI / 180);
-                break;
+                case "sin":
+                    result =
+                        Math.sin(
+                            number *
+                            Math.PI /
+                            180
+                        );
+                    break;
 
-            case "tan":
-                result = Math.tan(number * Math.PI / 180);
-                break;
+                case "cos":
+                    result =
+                        Math.cos(
+                            number *
+                            Math.PI /
+                            180
+                        );
+                    break;
 
-            case "sqrt":
-                result = Math.sqrt(number);
-                break;
+                case "tan":
+                    result =
+                        Math.tan(
+                            number *
+                            Math.PI /
+                            180
+                        );
+                    break;
 
-            case "square":
-                result = number * number;
-                break;
+                case "sqrt":
+                    result =
+                        Math.sqrt(number);
+                    break;
 
-            case "inverse":
-                if (number === 0) {
-                    currentValue = "ERROR";
-                    updateDisplay();
+                case "square":
+                    result =
+                        number * number;
+                    break;
+
+                case "inverse":
+
+                    if (number === 0) {
+                        throw new Error(
+                            "Division by zero"
+                        );
+                    }
+
+                    result =
+                        1 / number;
+
+                    break;
+
+                case "log":
+                    result =
+                        Math.log10(number);
+                    break;
+
+                case "ln":
+                    result =
+                        Math.log(number);
+                    break;
+
+                case "abs":
+                    result =
+                        Math.abs(number);
+                    break;
+
+                case "exp":
+                    result =
+                        Math.exp(number);
+                    break;
+
+                case "factorial":
+
+                    if (
+                        number < 0 ||
+                        !Number.isInteger(
+                            number
+                        ) ||
+                        number > 170
+                    ) {
+                        throw new Error(
+                            "Invalid factorial"
+                        );
+                    }
+
+                    result = 1;
+
+                    for (
+                        let i = 2;
+                        i <= number;
+                        i++
+                    ) {
+                        result *= i;
+                    }
+
+                    break;
+
+                case "pi":
+                    result = Math.PI;
+                    break;
+
+                case "e":
+                    result = Math.E;
+                    break;
+
+                default:
                     return;
-                }
+            }
 
-                result = 1 / number;
-                break;
+            if (!Number.isFinite(result)) {
+                throw new Error(
+                    "Invalid result"
+                );
+            }
 
-            case "log":
-                result = Math.log10(number);
-                break;
+            currentInput =
+                formatNumber(result);
 
-            case "ln":
-                result = Math.log(number);
-                break;
+            expression =
+                type.toUpperCase() +
+                "(" +
+                number +
+                ")";
 
-            case "abs":
-                result = Math.abs(number);
-                break;
+            justCalculated = true;
 
-            case "exp":
-                result = Math.exp(number);
-                break;
+            updateDisplay();
 
-            case "factorial":
-                result = factorial(number);
-                break;
-
-            case "pi":
-                result = Math.PI;
-                break;
-
-            case "e":
-                result = Math.E;
-                break;
-
-            default:
-                return;
         }
+        catch (error) {
 
-        if (!Number.isFinite(result)) {
-            currentValue = "ERROR";
-        } else {
-            currentValue = formatNumber(result);
+            currentInput =
+                "ERROR";
+
+            expression =
+                "Invalid calculation";
+
+            updateDisplay();
         }
-
-        expression = type.toUpperCase() + "(" + number + ")";
-
-        updateDisplay();
     }
 
-    function factorial(number) {
-        if (
-            number < 0 ||
-            !Number.isInteger(number) ||
-            number > 170
-        ) {
-            return NaN;
-        }
+    // ==========================================
+    // KEYPAD
+    // ==========================================
 
-        let result = 1;
-
-        for (let i = 2; i <= number; i++) {
-            result *= i;
-        }
-
-        return result;
-    }
-
-    // =========================
-    // BUTTON BASIC CALCULATOR
-    // =========================
-
-    const keypad = document.getElementById("keypad");
+    const keypad =
+        document.getElementById(
+            "keypad"
+        );
 
     if (keypad) {
 
-        keypad.addEventListener("click", function(event) {
+        keypad.addEventListener(
+            "click",
+            function(event) {
 
-            const button = event.target.closest("[data-key]");
+                const button =
+                    event.target.closest(
+                        "[data-key]"
+                    );
 
-            if (!button) {
-                return;
+                if (!button) {
+                    return;
+                }
+
+                let key =
+                    button.dataset.key;
+
+                // AC
+                if (
+                    key === "AC" ||
+                    key === "C"
+                ) {
+                    clearCalculator();
+                    return;
+                }
+
+                // Equal
+                if (
+                    key === "="
+                ) {
+                    calculate();
+                    return;
+                }
+
+                // Percent
+                if (
+                    key === "%" ||
+                    key === "percent"
+                ) {
+                    percentage();
+                    return;
+                }
+
+                // Plus minus
+                if (
+                    key === "+/-" ||
+                    key === "±" ||
+                    key === "sign"
+                ) {
+                    changeSign();
+                    return;
+                }
+
+                key =
+                    normalizeOperator(key);
+
+                // Operator
+                if (
+                    ["+","-","*","/"]
+                        .includes(key)
+                ) {
+                    inputOperator(key);
+                    return;
+                }
+
+                // Number
+                if (
+                    /^[0-9.]$/.test(key)
+                ) {
+                    inputNumber(key);
+                }
             }
-
-            const key = button.dataset.key;
-
-            if (key === "AC") {
-                clearCalculator();
-                return;
-            }
-
-            if (key === "=") {
-                calculate();
-                return;
-            }
-
-            if (key === "%") {
-                percentage();
-                return;
-            }
-
-            if (key === "+/-") {
-                changeSign();
-                return;
-            }
-
-            if (
-                key === "+" ||
-                key === "-" ||
-                key === "*" ||
-                key === "/"
-            ) {
-                inputOperator(key);
-                return;
-            }
-
-            inputNumber(key);
-        });
+        );
     }
 
-    // =========================
-    // BACKSPACE
-    // =========================
+    // ==========================================
+    // BACKSPACE BUTTON
+    // ==========================================
 
     const backspaceButton =
-        document.getElementById("backspaceBtn");
+        document.getElementById(
+            "backspaceBtn"
+        );
 
     if (backspaceButton) {
+
         backspaceButton.addEventListener(
             "click",
             backspace
         );
     }
 
-    // =========================
+    // ==========================================
     // MEMORY BUTTON
-    // =========================
+    // ==========================================
 
-    document.querySelectorAll("[data-action]").forEach(button => {
+    document
+        .querySelectorAll(
+            "[data-action]"
+        )
+        .forEach(button => {
 
-        button.addEventListener("click", function() {
+            button.addEventListener(
+                "click",
+                function() {
 
-            const action = button.dataset.action;
+                    const action =
+                        button.dataset.action;
 
-            switch (action) {
+                    switch (action) {
 
-                case "mc":
-                    memoryClear();
-                    break;
+                        case "mc":
+                            memoryClear();
+                            break;
 
-                case "mr":
-                    memoryRecall();
-                    break;
+                        case "mr":
+                            memoryRecall();
+                            break;
 
-                case "mplus":
-                    memoryAdd();
-                    break;
+                        case "mplus":
+                            memoryAdd();
+                            break;
 
-                case "mminus":
-                    memorySubtract();
-                    break;
+                        case "mminus":
+                            memorySubtract();
+                            break;
 
-                case "ms":
-                    memoryStore();
-                    break;
-            }
-        });
-    });
-
-    // =========================
-    // SCIENTIFIC BUTTON
-    // =========================
-
-    document.querySelectorAll("[data-scientific]").forEach(button => {
-
-        button.addEventListener("click", function() {
-
-            scientific(
-                button.dataset.scientific
+                        case "ms":
+                            memoryStore();
+                            break;
+                    }
+                }
             );
-
         });
 
-    });
+    // ==========================================
+    // SCIENTIFIC BUTTON
+    // ==========================================
 
-    // =========================
-    // CONSTANT BUTTON
-    // =========================
+    document
+        .querySelectorAll(
+            "[data-scientific]"
+        )
+        .forEach(button => {
 
-    document.querySelectorAll("[data-constant]").forEach(button => {
+            button.addEventListener(
+                "click",
+                function() {
 
-        button.addEventListener("click", function() {
-
-            const constant = button.dataset.constant;
-
-            if (constant === "pi") {
-                currentValue = String(Math.PI);
-            }
-
-            if (constant === "e") {
-                currentValue = String(Math.E);
-            }
-
-            expression = currentValue;
-
-            updateDisplay();
+                    scientific(
+                        button.dataset
+                            .scientific
+                    );
+                }
+            );
         });
 
-    });
+    // ==========================================
+    // CONSTANT
+    // ==========================================
 
-    // =========================
+    document
+        .querySelectorAll(
+            "[data-constant]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    const value =
+                        button.dataset
+                            .constant;
+
+                    if (value === "pi") {
+
+                        currentInput =
+                            String(
+                                Math.PI
+                            );
+                    }
+
+                    else if (
+                        value === "e"
+                    ) {
+
+                        currentInput =
+                            String(
+                                Math.E
+                            );
+                    }
+
+                    expression =
+                        currentInput;
+
+                    justCalculated =
+                        false;
+
+                    updateDisplay();
+                }
+            );
+        });
+
+    // ==========================================
     // KEYBOARD
-    // =========================
+    // ==========================================
 
-    document.addEventListener("keydown", function(event) {
+    document.addEventListener(
+        "keydown",
+        function(event) {
 
-        const key = event.key;
+            const key =
+                event.key;
 
-        if (
-            key >= "0" &&
-            key <= "9"
-        ) {
-            inputNumber(key);
-            return;
+            // Angka
+            if (
+                /^[0-9]$/.test(key)
+            ) {
+
+                inputNumber(key);
+                return;
+            }
+
+            // Decimal
+            if (
+                key === "."
+            ) {
+
+                inputNumber(".");
+                return;
+            }
+
+            // Operator
+            if (
+                ["+","-","*","/"]
+                    .includes(key)
+            ) {
+
+                inputOperator(key);
+                return;
+            }
+
+            // Enter
+            if (
+                key === "Enter" ||
+                key === "="
+            ) {
+
+                calculate();
+                return;
+            }
+
+            // Escape
+            if (
+                key === "Escape"
+            ) {
+
+                clearCalculator();
+                return;
+            }
+
+            // Backspace
+            if (
+                key === "Backspace"
+            ) {
+
+                backspace();
+                return;
+            }
+
+            // Percent
+            if (
+                key === "%"
+            ) {
+
+                percentage();
+            }
         }
+    );
 
-        if (key === ".") {
-            inputNumber(".");
-            return;
-        }
-
-        if (
-            key === "+" ||
-            key === "-" ||
-            key === "*" ||
-            key === "/"
-        ) {
-            inputOperator(key);
-            return;
-        }
-
-        if (
-            key === "Enter" ||
-            key === "="
-        ) {
-            calculate();
-            return;
-        }
-
-        if (key === "Escape") {
-            clearCalculator();
-            return;
-        }
-
-        if (key === "Backspace") {
-            backspace();
-            return;
-        }
-
-        if (key === "%") {
-            percentage();
-        }
-
-    });
-
-    // =========================
+    // ==========================================
     // HISTORY
-    // =========================
+    // ==========================================
 
     function saveHistory() {
 
         try {
+
             localStorage.setItem(
                 "cubesCalculatorHistory",
                 JSON.stringify(history)
             );
-        } catch (error) {}
+
+        }
+        catch (error) {}
     }
 
     function loadHistory() {
@@ -534,15 +1177,26 @@
                 );
 
             if (saved) {
-                history = JSON.parse(saved);
+
+                const parsed =
+                    JSON.parse(saved);
+
+                if (
+                    Array.isArray(parsed)
+                ) {
+                    history = parsed;
+                }
             }
 
-        } catch (error) {
+        }
+        catch (error) {
+
             history = [];
         }
     }
 
     loadHistory();
+
     updateDisplay();
 
 })();
