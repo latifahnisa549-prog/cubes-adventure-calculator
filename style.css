@@ -14,15 +14,17 @@
   --danger:#ff5577;
 
   --border:rgba(95,221,255,.22);
+
   --shadow:0 18px 60px rgba(0,0,0,.45);
 }
 
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
 *{
   box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
 }
 
 body{
@@ -47,7 +49,6 @@ body{
    LIGHT MODE
 ========================================================= */
 
-body.light,
 body.light-mode{
   --bg:#eaf5ff;
   --panel:#f7fbff;
@@ -66,7 +67,7 @@ body.light-mode{
 
 
 /* =========================================================
-   FORM
+   FORM ELEMENT
 ========================================================= */
 
 button,
@@ -82,7 +83,121 @@ button{
 
 
 /* =========================================================
-   BACKGROUND
+   ⭐ MODE CALCULATOR
+   BASIC / SCIENTIFIC / PROGRAMMER / CONVERTER
+========================================================= */
+
+#modeSelect{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+
+  min-width:190px;
+
+  padding:11px 42px 11px 16px;
+
+  color:#35e7ff !important;
+
+  background-color:#0a1328 !important;
+
+  background-image:
+    linear-gradient(
+      45deg,
+      transparent 50%,
+      #35e7ff 50%
+    ),
+    linear-gradient(
+      135deg,
+      #35e7ff 50%,
+      transparent 50%
+    );
+
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%;
+
+  background-size:
+    6px 6px,
+    6px 6px;
+
+  background-repeat:no-repeat;
+
+  border:1px solid #35e7ff !important;
+
+  border-radius:12px;
+
+  outline:none;
+
+  font-weight:800;
+
+  letter-spacing:1px;
+
+  box-shadow:
+    0 0 10px rgba(53,231,255,.12),
+    inset 0 0 15px rgba(53,231,255,.04);
+
+  text-shadow:
+    0 0 8px rgba(53,231,255,.4);
+
+  transition:
+    .2s ease;
+}
+
+
+/* HOVER */
+
+#modeSelect:hover{
+  color:#ffffff !important;
+
+  background-color:#0d1d3b !important;
+
+  border-color:#35e7ff !important;
+
+  box-shadow:
+    0 0 18px rgba(53,231,255,.3),
+    inset 0 0 15px rgba(53,231,255,.08);
+
+  transform:translateY(-1px);
+}
+
+
+/* FOCUS */
+
+#modeSelect:focus{
+  color:#35e7ff !important;
+
+  background-color:#0a1328 !important;
+
+  border-color:#35e7ff !important;
+
+  outline:none;
+
+  box-shadow:
+    0 0 0 2px rgba(53,231,255,.12),
+    0 0 25px rgba(53,231,255,.25);
+}
+
+
+/* DROPDOWN OPTION */
+
+#modeSelect option{
+  background:#071021 !important;
+  color:#35e7ff !important;
+
+  font-weight:800;
+}
+
+
+/* OPTION SAAT DIPILIH */
+
+#modeSelect option:checked{
+  background:#102c52 !important;
+  color:#35e7ff !important;
+}
+
+
+/* =========================================================
+   BACKGROUND GRID
 ========================================================= */
 
 .bg-grid{
@@ -112,6 +227,11 @@ button{
   transform-origin:bottom;
 }
 
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
 .particles{
   position:fixed;
   inset:0;
@@ -134,7 +254,6 @@ button{
 }
 
 @keyframes float{
-
   from{
     transform:
       translateY(110vh)
@@ -146,12 +265,11 @@ button{
       translateY(-10vh)
       rotate(360deg);
   }
-
 }
 
 
 /* =========================================================
-   TOP BAR
+   TOPBAR
 ========================================================= */
 
 .topbar{
@@ -170,6 +288,11 @@ button{
   gap:15px;
 }
 
+
+/* =========================================================
+   BRAND
+========================================================= */
+
 .brand{
   display:flex;
   align-items:center;
@@ -178,6 +301,7 @@ button{
 
 .brand-cube{
   font-size:38px;
+
   color:var(--cyan);
 
   text-shadow:
@@ -189,18 +313,20 @@ button{
 .brand h1{
   font-size:18px;
   margin:0;
+
   letter-spacing:2px;
 }
 
 .brand span{
   font-size:11px;
   color:var(--cyan);
+
   letter-spacing:3px;
 }
 
 
 /* =========================================================
-   TOP ACTIONS
+   TOP ACTION
 ========================================================= */
 
 .top-actions{
@@ -209,162 +335,28 @@ button{
 }
 
 
-/* =========================================================
-   MODE SELECT
-   BASIC / SCIENTIFIC / PROGRAMMER / CONVERTER
-========================================================= */
+/* ICON BUTTON */
 
-/*
-   INI BAGIAN YANG DIPERBAIKI
-
-   Tulisan tetap PUTIH.
-   Kotak dibuat DARK NAVY supaya kontras.
-*/
-
-#modeSelect{
-
-  color:#ffffff !important;
+.icon-btn{
+  min-width:42px;
 
   background:
     linear-gradient(
       145deg,
-      #0b1428,
-      #030816
-    ) !important;
+      var(--panel2),
+      #080d1b
+    );
 
-  border:1px solid
-    rgba(53,231,255,.45) !important;
+  border:
+    1px solid var(--border);
 
   border-radius:10px;
 
   padding:10px 13px;
-
-  font-weight:800;
-
-  letter-spacing:1px;
-
-  outline:none;
-
-  box-shadow:
-    inset 0 1px rgba(255,255,255,.04),
-    0 5px 15px rgba(0,0,0,.35);
-
-  -webkit-appearance:auto;
-  appearance:auto;
-}
-
-
-/*
-   OPTION DI DALAM DROPDOWN
-*/
-
-#modeSelect option{
-
-  color:#ffffff !important;
-
-  background:#08111f !important;
-
-  font-weight:700;
-}
-
-
-/*
-   SAAT DIPILIH / FOCUS
-*/
-
-#modeSelect:focus{
-
-  color:#ffffff !important;
-
-  background:
-    linear-gradient(
-      145deg,
-      #0d1b35,
-      #040914
-    ) !important;
-
-  border-color:
-    var(--cyan) !important;
-
-  box-shadow:
-    0 0 0 2px
-      rgba(53,231,255,.10),
-    0 0 18px
-      rgba(53,231,255,.25);
-}
-
-
-/*
-   HOVER
-*/
-
-#modeSelect:hover{
-
-  border-color:
-    var(--cyan) !important;
-
-  box-shadow:
-    0 0 15px
-    rgba(53,231,255,.22);
-}
-
-
-/* =========================================================
-   ICON BUTTON
-========================================================= */
-
-.icon-btn{
-
-  min-width:42px;
 
   color:var(--cyan);
 
-  background:
-    linear-gradient(
-      145deg,
-      #101b31,
-      #070d1b
-    );
-
-  border:1px solid var(--border);
-
-  border-radius:10px;
-
-  padding:10px 13px;
-}
-
-.icon-btn:hover{
-
-  border-color:var(--cyan);
-
-  box-shadow:
-    0 0 18px
-    rgba(53,231,255,.2);
-}
-
-
-/* =========================================================
-   LAYOUT
-========================================================= */
-
-.layout{
-
-  position:relative;
-  z-index:1;
-
-  max-width:1250px;
-  margin:0 auto;
-
-  padding:10px 20px 25px;
-
-  display:grid;
-
-  grid-template-columns:
-    320px minmax(320px,520px);
-
-  justify-content:center;
-
-  gap:22px;
+  font-weight:700;
 }
 
 
@@ -372,8 +364,32 @@ button{
    PANEL
 ========================================================= */
 
-.panel{
+.layout{
+  position:relative;
+  z-index:1;
 
+  max-width:1250px;
+
+  margin:0 auto;
+
+  padding:
+    10px
+    20px
+    25px;
+
+  display:grid;
+
+  grid-template-columns:
+    320px
+    minmax(320px,520px);
+
+  justify-content:center;
+
+  gap:22px;
+}
+
+
+.panel{
   background:
     linear-gradient(
       145deg,
@@ -381,20 +397,22 @@ button{
       rgba(5,9,20,.95)
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   box-shadow:
     var(--shadow),
-    inset 0 1px
-    rgba(255,255,255,.04);
+    inset 0 1px rgba(255,255,255,.04);
 
   border-radius:24px;
 
   backdrop-filter:blur(15px);
 }
 
-.light .panel{
-  background:rgba(255,255,255,.82);
+
+.light-mode .panel{
+  background:
+    rgba(255,255,255,.82);
 }
 
 
@@ -403,7 +421,6 @@ button{
 ========================================================= */
 
 .adventure-panel{
-
   padding:20px;
 
   display:flex;
@@ -412,8 +429,12 @@ button{
   gap:14px;
 }
 
-.knight-wrap{
 
+/* =========================================================
+   KNIGHT
+========================================================= */
+
+.knight-wrap{
   height:205px;
 
   display:grid;
@@ -423,7 +444,6 @@ button{
 }
 
 .knight-wrap:after{
-
   content:"";
 
   position:absolute;
@@ -442,8 +462,8 @@ button{
   opacity:.25;
 }
 
-.cube-knight{
 
+.cube-knight{
   position:relative;
 
   width:125px;
@@ -460,15 +480,13 @@ button{
 }
 
 @keyframes knightFloat{
-
   50%{
     transform:translateY(-8px);
   }
-
 }
 
-.helmet{
 
+.helmet{
   position:absolute;
 
   width:80px;
@@ -484,18 +502,18 @@ button{
       #171f35
     );
 
-  border:3px solid #9bb4d2;
+  border:
+    3px solid #9bb4d2;
 
   border-radius:12px;
 
   box-shadow:
     inset 5px 5px 12px #a9bdd2,
-    0 0 18px
-    rgba(53,231,255,.25);
+    0 0 18px rgba(53,231,255,.25);
 }
 
-.visor{
 
+.visor{
   position:absolute;
 
   left:10px;
@@ -506,7 +524,8 @@ button{
 
   background:#050812;
 
-  border:2px solid var(--cyan);
+  border:
+    2px solid var(--cyan);
 
   display:flex;
 
@@ -516,7 +535,6 @@ button{
 }
 
 .visor i{
-
   flex:1;
 
   background:var(--cyan);
@@ -525,8 +543,8 @@ button{
     0 0 8px var(--cyan);
 }
 
-.horn{
 
+.horn{
   position:absolute;
 
   top:-14px;
@@ -544,14 +562,17 @@ button{
 }
 
 .horn.right{
-
   right:4px;
 
   transform:skew(18deg);
 }
 
-.armor{
 
+/* =========================================================
+   ARMOR
+========================================================= */
+
+.armor{
   position:absolute;
 
   left:18px;
@@ -567,14 +588,17 @@ button{
       #111a2e
     );
 
-  border:3px solid #738aa8;
+  border:
+    3px solid #738aa8;
 
   border-radius:
-    16px 16px 9px 9px;
+    16px
+    16px
+    9px
+    9px;
 }
 
 .core{
-
   position:absolute;
 
   width:25px;
@@ -598,8 +622,8 @@ button{
     0 0 25px var(--cyan);
 }
 
-.shoulder{
 
+.shoulder{
   position:absolute;
 
   top:5px;
@@ -611,7 +635,8 @@ button{
 
   background:#526681;
 
-  border:2px solid #8ca4c0;
+  border:
+    2px solid #8ca4c0;
 }
 
 .shoulder.left{
@@ -622,8 +647,12 @@ button{
   right:-21px;
 }
 
-.sword{
 
+/* =========================================================
+   SWORD
+========================================================= */
+
+.sword{
   position:absolute;
 
   width:10px;
@@ -649,7 +678,6 @@ button{
 }
 
 .sword:after{
-
   content:"";
 
   position:absolute;
@@ -663,8 +691,12 @@ button{
   top:60px;
 }
 
-.shield{
 
+/* =========================================================
+   SHIELD
+========================================================= */
+
+.shield{
   position:absolute;
 
   left:-4px;
@@ -690,7 +722,8 @@ button{
       0 18%
     );
 
-  border:2px solid var(--cyan);
+  border:
+    2px solid var(--cyan);
 
   display:grid;
   place-items:center;
@@ -704,7 +737,6 @@ button{
 ========================================================= */
 
 .knight-message{
-
   text-align:center;
 
   color:var(--cyan);
@@ -720,21 +752,19 @@ button{
 ========================================================= */
 
 .level-card{
-
   padding:15px;
 
   background:
     rgba(53,231,255,.05);
 
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   border-radius:15px;
 }
 
 .level-head{
-
   display:flex;
-
   justify-content:space-between;
 
   font-size:11px;
@@ -747,14 +777,14 @@ button{
 }
 
 .level-name{
-
   font-weight:800;
 
-  margin:7px 0 10px;
+  margin:
+    7px 0
+    10px;
 }
 
 .xp-bar{
-
   height:9px;
 
   background:#030711;
@@ -765,7 +795,6 @@ button{
 }
 
 .xp-bar span{
-
   display:block;
 
   height:100%;
@@ -796,7 +825,6 @@ button{
 ========================================================= */
 
 .stats{
-
   display:grid;
 
   grid-template-columns:
@@ -806,7 +834,6 @@ button{
 }
 
 .stats div{
-
   padding:12px;
 
   background:
@@ -818,7 +845,6 @@ button{
 }
 
 .stats span{
-
   display:block;
 
   font-size:9px;
@@ -829,7 +855,6 @@ button{
 }
 
 .stats b{
-
   font-size:20px;
 
   color:var(--gold);
@@ -841,12 +866,12 @@ button{
 ========================================================= */
 
 .wide-btn{
-
   width:100%;
 
   padding:12px;
 
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   border-radius:12px;
 
@@ -860,10 +885,11 @@ button{
   font-weight:800;
 
   letter-spacing:1px;
+
+  color:var(--cyan);
 }
 
 .wide-btn:hover{
-
   border-color:var(--cyan);
 
   box-shadow:
@@ -877,7 +903,6 @@ button{
 ========================================================= */
 
 .calculator{
-
   padding:18px;
 
   position:relative;
@@ -889,7 +914,6 @@ button{
 ========================================================= */
 
 .display{
-
   min-height:145px;
 
   padding:18px;
@@ -903,7 +927,8 @@ button{
       #050912 65%
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   box-shadow:
     inset 0 0 35px
@@ -921,7 +946,6 @@ button{
 }
 
 .display:after{
-
   content:"";
 
   position:absolute;
@@ -935,13 +959,13 @@ button{
       transparent 52%
     );
 
-  background-size:100% 8px;
+  background-size:
+    100% 8px;
 
   pointer-events:none;
 }
 
 .display-top{
-
   font-size:18px;
 
   color:var(--muted);
@@ -954,9 +978,12 @@ button{
 }
 
 .display-result{
-
   font-size:
-    clamp(36px,7vw,62px);
+    clamp(
+      36px,
+      7vw,
+      62px
+    );
 
   font-weight:800;
 
@@ -974,7 +1001,6 @@ button{
 }
 
 .memory-indicator{
-
   position:absolute;
 
   top:9px;
@@ -993,7 +1019,6 @@ button{
 ========================================================= */
 
 .memory-row{
-
   display:grid;
 
   grid-template-columns:
@@ -1005,41 +1030,33 @@ button{
 }
 
 .memory-row button{
-
   padding:10px 4px;
 
   font-size:11px;
 
-  color:#ffffff;
-
   background:
     linear-gradient(
       145deg,
-      #101c32,
-      #060b18
+      var(--panel2),
+      #080d1b
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   border-radius:10px;
+
+  color:var(--cyan);
+
+  font-weight:700;
 }
 
 .memory-row button:hover{
-
   border-color:var(--cyan);
 
   box-shadow:
     0 0 18px
     rgba(53,231,255,.2);
-}
-
-
-/* =========================================================
-   HIDDEN
-========================================================= */
-
-.hidden{
-  display:none!important;
 }
 
 
@@ -1050,12 +1067,12 @@ button{
 .scientific-panel,
 .programmer-panel,
 .converter-panel{
-
   margin:10px 0;
 
   padding:10px;
 
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   border-radius:15px;
 
@@ -1063,8 +1080,11 @@ button{
     rgba(53,231,255,.025);
 }
 
-.scientific-panel{
+.hidden{
+  display:none!important;
+}
 
+.scientific-panel{
   display:grid;
 
   grid-template-columns:
@@ -1074,49 +1094,35 @@ button{
 }
 
 .scientific-panel button{
-
   padding:9px 3px;
 
   font-size:11px;
 
-  color:#ffffff;
+  color:var(--cyan);
 
   font-weight:800;
 
   background:
     linear-gradient(
       145deg,
-      #101c32,
-      #050a16
+      #111d35,
+      #070d1c
     );
 
   border:
-    1px solid
-    rgba(53,231,255,.20);
+    1px solid var(--border);
 
   border-radius:10px;
-
-  box-shadow:
-    inset 0 1px
-    rgba(255,255,255,.03);
 }
 
 .scientific-panel button:hover{
-
   color:#ffffff;
-
-  background:
-    linear-gradient(
-      145deg,
-      #123052,
-      #071322
-    );
 
   border-color:var(--cyan);
 
   box-shadow:
     0 0 18px
-    rgba(53,231,255,.22);
+    rgba(53,231,255,.2);
 }
 
 
@@ -1126,7 +1132,6 @@ button{
 
 .base-row,
 .bit-row{
-
   display:grid;
 
   grid-template-columns:
@@ -1138,75 +1143,55 @@ button{
 }
 
 .bit-row{
-
   grid-template-columns:
     repeat(6,1fr);
 }
 
 .base-row button,
 .bit-row button{
-
   padding:8px 3px;
 
   font-size:10px;
 
-  color:#ffffff;
+  color:var(--cyan);
 
   font-weight:800;
 
   background:
     linear-gradient(
       145deg,
-      #101c32,
-      #050a16
+      #111d35,
+      #070d1c
     );
 
   border:
-    1px solid
-    rgba(53,231,255,.20);
+    1px solid var(--border);
 
   border-radius:10px;
 }
 
 .base-row button:hover,
 .bit-row button:hover{
-
   color:#ffffff;
-
-  background:
-    linear-gradient(
-      145deg,
-      #123052,
-      #071322
-    );
 
   border-color:var(--cyan);
 
   box-shadow:
     0 0 18px
-    rgba(53,231,255,.22);
+    rgba(53,231,255,.2);
 }
 
 .base-row .active{
-
   border-color:var(--cyan);
 
-  color:#ffffff;
-
-  background:
-    linear-gradient(
-      145deg,
-      #123052,
-      #071322
-    );
+  color:var(--cyan);
 
   box-shadow:
-    0 0 15px
-    rgba(53,231,255,.20);
+    0 0 14px
+    rgba(53,231,255,.18);
 }
 
 .programmer-value{
-
   text-align:right;
 
   font-family:monospace;
@@ -1224,7 +1209,6 @@ button{
 ========================================================= */
 
 .converter-controls{
-
   display:grid;
 
   grid-template-columns:
@@ -1238,36 +1222,27 @@ button{
 .converter-controls select,
 .converter-controls input,
 .converter-controls output{
-
   width:100%;
 
   padding:9px;
 
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   border-radius:9px;
 
-  background:#091221;
+  background:var(--panel2);
 
-  color:#ffffff;
-}
-
-.converter-controls select option{
-
-  background:#08111f;
-
-  color:#ffffff;
+  color:var(--text);
 }
 
 .converter-controls span{
-
   text-align:center;
 
   color:var(--cyan);
 }
 
 .converter-controls output{
-
   grid-column:1/-1;
 
   text-align:center;
@@ -1283,7 +1258,6 @@ button{
 ========================================================= */
 
 .keypad{
-
   display:grid;
 
   grid-template-columns:
@@ -1295,14 +1269,12 @@ button{
 }
 
 .keypad button{
-
   min-height:60px;
 
   border-radius:15px;
 
   border:
-    1px solid
-    rgba(130,160,200,.18);
+    1px solid rgba(130,160,200,.18);
 
   background:
     linear-gradient(
@@ -1318,16 +1290,13 @@ button{
   font-weight:700;
 
   box-shadow:
-    inset 0 1px
-    rgba(255,255,255,.05),
-    0 7px 15px
-    rgba(0,0,0,.25);
+    inset 0 1px rgba(255,255,255,.05),
+    0 7px 15px rgba(0,0,0,.25);
 
   transition:.12s;
 }
 
 .keypad button:hover{
-
   transform:translateY(-2px);
 
   border-color:var(--cyan);
@@ -1338,14 +1307,12 @@ button{
 }
 
 .keypad button:active{
-
   transform:
     translateY(2px)
     scale(.97);
 }
 
 .keypad .operator{
-
   color:var(--cyan);
 
   background:
@@ -1365,7 +1332,6 @@ button{
 }
 
 .keypad .equal{
-
   color:#031017;
 
   background:
@@ -1388,7 +1354,6 @@ button{
 ========================================================= */
 
 .keyboard-ready{
-
   text-align:center;
 
   color:var(--muted);
@@ -1406,12 +1371,14 @@ button{
 ========================================================= */
 
 .footer{
-
   max-width:1250px;
 
   margin:auto;
 
-  padding:12px 20px 24px;
+  padding:
+    12px
+    20px
+    24px;
 
   display:flex;
 
@@ -1430,7 +1397,6 @@ button{
 ========================================================= */
 
 .modal{
-
   position:fixed;
 
   inset:0;
@@ -1454,7 +1420,6 @@ button{
 }
 
 .modal-box{
-
   width:min(560px,100%);
 
   max-height:80vh;
@@ -1468,7 +1433,8 @@ button{
       #070b16
     );
 
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   border-radius:20px;
 
@@ -1481,14 +1447,12 @@ button{
 }
 
 .modal-box h2{
-
   margin-top:0;
 
   color:var(--cyan);
 }
 
 .modal-close{
-
   position:absolute;
 
   right:14px;
@@ -1503,9 +1467,13 @@ button{
   color:var(--muted);
 }
 
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
 .history-item,
 .achievement-item{
-
   display:flex;
 
   align-items:center;
@@ -1521,7 +1489,8 @@ button{
   background:
     rgba(255,255,255,.035);
 
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   border-radius:12px;
 }
@@ -1531,7 +1500,6 @@ button{
 }
 
 .history-item button{
-
   border:0;
 
   background:none;
@@ -1553,7 +1521,6 @@ button{
 ========================================================= */
 
 .settings-box label{
-
   display:flex;
 
   justify-content:space-between;
@@ -1570,12 +1537,12 @@ button{
 
 .setting-toggle,
 .settings-box select{
+  background:var(--panel2);
 
-  background:#091221;
+  border:
+    1px solid var(--border);
 
-  border:1px solid var(--border);
-
-  color:#ffffff;
+  color:var(--cyan);
 
   border-radius:8px;
 
@@ -1583,7 +1550,6 @@ button{
 }
 
 .danger-bg{
-
   background:
     linear-gradient(
       145deg,
@@ -1604,7 +1570,6 @@ button{
 ========================================================= */
 
 .toast-container{
-
   position:fixed;
 
   right:20px;
@@ -1620,10 +1585,12 @@ button{
 }
 
 .toast{
+  padding:
+    13px
+    17px;
 
-  padding:13px 17px;
-
-  border:1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   border-radius:12px;
 
@@ -1643,7 +1610,6 @@ button{
 }
 
 @keyframes toastIn{
-
   from{
     transform:translateX(30px);
     opacity:0;
@@ -1653,16 +1619,16 @@ button{
     transform:none;
     opacity:1;
   }
-
 }
 
 
 /* =========================================================
-   ANIMATION
+   LEVEL UP
 ========================================================= */
 
 .levelup{
-  animation:levelPulse .8s;
+  animation:
+    levelPulse .8s;
 }
 
 .error{
@@ -1670,7 +1636,6 @@ button{
 }
 
 @keyframes levelPulse{
-
   50%{
     transform:scale(1.03);
 
@@ -1680,7 +1645,6 @@ button{
         var(--gold)
       );
   }
-
 }
 
 
@@ -1691,7 +1655,6 @@ button{
 @media(max-width:850px){
 
   .layout{
-
     grid-template-columns:
       minmax(300px,520px);
   }
@@ -1705,7 +1668,6 @@ button{
   }
 
   .adventure-panel{
-
     display:grid;
 
     grid-template-columns:
@@ -1729,10 +1691,6 @@ button{
     grid-column:1/-1;
   }
 
-  .footer{
-    display:none;
-  }
-
 }
 
 
@@ -1754,36 +1712,35 @@ button{
     font-size:8px;
   }
 
+  /*
+    MODE SELECT TETAP DITAMPILKAN
+    DI HP SUPAYA BISA GANTI
+    BASIC / SCIENTIFIC / PROGRAMMER / CONVERTER
+  */
+
   .top-actions select{
     display:block;
   }
 
   #modeSelect{
-
-    max-width:150px;
+    min-width:145px;
 
     font-size:10px;
 
-    padding:9px 7px;
-
-    color:#ffffff !important;
-
-    background:#08111f !important;
-  }
-
-  #modeSelect option{
-
-    color:#ffffff !important;
-
-    background:#08111f !important;
+    padding:
+      9px
+      32px
+      9px
+      10px;
   }
 
   .layout{
-    padding:4px 8px;
+    padding:
+      4px
+      8px;
   }
 
   .calculator{
-
     padding:10px;
 
     border-radius:18px;
@@ -1802,20 +1759,17 @@ button{
   }
 
   .keypad button{
-
     min-height:58px;
 
     border-radius:12px;
   }
 
   .scientific-panel{
-
     grid-template-columns:
       repeat(4,1fr);
   }
 
   .bit-row{
-
     grid-template-columns:
       repeat(3,1fr);
   }
@@ -1829,7 +1783,6 @@ button{
   }
 
   .converter-controls{
-
     grid-template-columns:
       1fr 1fr;
   }
@@ -1842,7 +1795,7 @@ button{
 
 
 /* =========================================================
-   REDUCE MOTION
+   REDUCED MOTION
 ========================================================= */
 
 @media(prefers-reduced-motion:reduce){
@@ -1850,7 +1803,6 @@ button{
   *,
   *:before,
   *:after{
-
     animation-duration:.001ms!important;
 
     transition:none!important;
